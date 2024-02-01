@@ -5,6 +5,6 @@ import { createRoute } from '../lib';
  */
 export const home = createRoute({
   type: 'page',
-  path: '/',
+  path: '',
   view: async () => (await import('@/pages/home')).HomePage,
 });
