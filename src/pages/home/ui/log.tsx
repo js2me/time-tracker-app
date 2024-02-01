@@ -99,7 +99,7 @@ export const Log = ({ log, index }: { log: ProjectLog; index: number }) => {
           />
         ) : (
           <div
-            className={'ml-3 select-text'}
+            className={'ml-3 select-text whitespace-pre-wrap'}
             dangerouslySetInnerHTML={{
               __html: prepareMeta(meta),
             }}
