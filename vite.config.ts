@@ -86,7 +86,7 @@ export default defineConfig({
     rollupOptions: {
       cache: !isProd,
       output: {
-        entryFileNames: 'static/js/__entry__.[hash].js',
+        entryFileNames: 'static/js/entry.[hash].js',
         assetFileNames: 'static/assets/[name].[hash].[ext]',
         chunkFileNames: 'static/js/[name].[hash].js',
         // assetFileNames: '[name].[hash].[ext]',
