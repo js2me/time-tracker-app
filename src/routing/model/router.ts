@@ -1,7 +1,7 @@
 import { createRouter } from '../lib';
 
 export const router = createRouter({
-  base: '/',
+  base: buildEnvs.BASE_URL || '/',
 
   privacy: () => {
     // TODO:

@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
-import * as duration from 'dayjs/plugin/duration';
-import * as relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { typeGuard } from '@/shared/lib/common/type-guard';
 import { NO_VALUE } from './constants';
 import { parseSetting } from './utils';

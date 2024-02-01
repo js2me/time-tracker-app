@@ -1,5 +1,5 @@
 import { sample, Store } from 'effector';
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 import { createValueModel } from '@/shared/lib/effector/value-model';
 import { getLocationQueryParams } from '../lib';
 import { router } from './router';
@@ -10,7 +10,7 @@ export const $initialized = initialized.$on;
 
 export const initialize = initialized.turnOn;
 
-export const history = createBrowserHistory();
+export const history = createHashHistory();
 
 sample({
   clock: initialize,
