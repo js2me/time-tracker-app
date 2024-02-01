@@ -6,7 +6,7 @@
   "homepage": "https://js2me.github.io/time-tracker-app",
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "dev": "cross-env NODE_ENV=development vite --host 0.0.0.0",
     "build": "cross-env NODE_ENV=production vite build",
     "build:preview": "cross-env NODE_ENV=production MODE=preview vite build",
