@@ -181,6 +181,11 @@ export default defineConfig({
             "src": "favicon.png",
             "sizes": "76x66",
             "type": "image/png"
+          },
+          {
+            "src": "logo.png",
+            "sizes": "513x505",
+            "type": "image/png"
           }
         ],
         "name": "Фриланс Тайм Машина",
@@ -197,7 +202,12 @@ export default defineConfig({
     }),
     html({
       minify: isProd,
-    })
+      inject: {
+        data: {
+          baseUrl: buildEnvs.BASE_URL || '/',
+        }
+      }
+    }),
   ].filter(Boolean),
 });
 

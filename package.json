@@ -129,6 +129,7 @@
     "vite-plugin-checker": "0.6.2",
     "vite-plugin-eslint": "1.8.1",
     "vite-plugin-html": "3.2.1",
+    "vite-plugin-ejs": "1.7.0",
     "vite-plugin-pwa": "0.17.4",
     "vite-plugin-svgr": "4.2.0"
   }
