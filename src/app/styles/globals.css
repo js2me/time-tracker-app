@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --custom-background: 0 0% 100%;
+
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 35.97 45.64% 49.63%;
+    --primary-foreground: 0 0% 100%;
+
+    --tertiary: 0 0% 32.16%;
+    --tertiary-foreground: 0 0% 100%;
+
+    --reverse: 240 10% 3.9%;
+    --reverse-foreground: 0 0% 98%;
+
+    --secondary: 21.05 100% 54.91%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 0 0% 91.37%;
+    --accent-foreground: 0 0% 7.84%;
+
+
+    --positive: 109.36 57.09% 51.57%;
+    --positive-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --custom-background: 0 0% 9.29%;
+
+    --background: 0 0% 9.29%;
+    --foreground: 0 0% 64.72%;
+
+    --card: 0 0% 13.73%;
+    --card-foreground: 0 0% 79.22%;
+
+    --popover: 0 0% 17.57%;
+    --popover-foreground: 0 0% 74.9%;
+
+    --primary: 36 39.01% 24.81%;
+    --primary-foreground: 0 0% 100%;
+
+    --tertiary: 0 0% 85.49%;
+    --tertiary-foreground: 0 0% 0%;
+
+    --reverse: 0 0% 64.09%;
+    --reverse-foreground: 0 0% 11.76%;
+
+    --secondary: 21.05 100% 54.91%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 23.15%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 0 0% 30.59%;
+    --accent-foreground: 0 0% 63.53%;
+
+    --positive: 109.36 61.11% 40.56%;
+    --positive-foreground: 0 0% 98%;
+
+    --destructive: 0 53.41% 51.33%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 26.3%;
+    --input: 0 0% 28.82%;
+    --ring: 240 10% 3.9%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  :root {
+    --view-width: 52.5rem;
+  }
+
+  html {
+    font-size: 16px;
+  }
+  * {
+    @apply border-border select-none;
+  }
+  body {
+    @apply bg-custom-background text-foreground;
+  }
+  .hljs {
+    @apply leading-none rounded-sm font-mono;
+  }
+
+  @media screen and (min-width: 1024px) {
+    html {
+      font-size: calc(16px + (17 - 16) * ((100vw - 1920px) / (1920 - 1024)));
+    }
+  }
+
+  @media screen and (min-width: 1920px) {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  @media screen and (min-width: 3000px) {
+    :root {
+      --view-width: 64rem;
+    }
+
+    html {
+      font-size: 20px;
+    }
+  }
+
+  @media screen and (min-width: 3400px) {
+    :root {
+      --view-width: 64rem;
+    }
+
+    html {
+      font-size: 22px;
+    }
+  }
+}
