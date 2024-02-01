@@ -179,12 +179,12 @@ export default defineConfig({
         "icons": [
           {
             "src": "favicon.png",
-            "sizes": "76x66",
+            "sizes": "64x64",
             "type": "image/png"
           },
           {
             "src": "logo.png",
-            "sizes": "513x505",
+            "sizes": "391x391",
             "type": "image/png"
           }
         ],

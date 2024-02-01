@@ -73,39 +73,35 @@ export const createNewProject = projects.add;
 export const changeLog = createEvent<ProjectLog & { index: number }>();
 export const deleteLog = createEvent<{ index: number }>();
 
-export const $logsLabels = combine(
-  rate.$value,
-  activeProject.$value,
-  (rate, activeProject) => {
-    if (!activeProject) return '';
+export const $logsLabels = combine(activeProject.$value, (activeProject) => {
+  if (!activeProject) return '';
 
-    if (!activeProject.logs.length) return '';
+  if (!activeProject.logs.length) return '';
 
-    const segments = [] as string[];
+  const segments = [] as string[];
 
-    const totals = {
-      hours: 0,
-      minutes: 0,
-    };
+  const totals = {
+    hours: 0,
+    minutes: 0,
+  };
 
-    activeProject.logs.forEach((log) => {
-      const dur = hammer.parser.msDuration(log.spentTime);
-      if (dur.hours || dur.minutes) {
-        totals.hours += dur.hours;
-        totals.minutes += dur.minutes;
-        segments.push(`${dur.hours}h ${dur.minutes}m`);
-      }
-    });
+  activeProject.logs.forEach((log) => {
+    const dur = hammer.parser.msDuration(log.spentTime);
+    if (dur.hours || dur.minutes) {
+      totals.hours += dur.hours;
+      totals.minutes += dur.minutes;
+      segments.push(`${dur.hours}h ${dur.minutes}m`);
+    }
+  });
 
-    totals.hours += Math.floor(totals.minutes / 60);
-    totals.minutes = Math.floor(totals.minutes % 60);
+  totals.hours += Math.floor(totals.minutes / 60);
+  totals.minutes = Math.floor(totals.minutes % 60);
 
-    return `${segments.join(' + ')} = ${totals.hours}h ${totals.minutes}m (${(
-      rate * totals.hours +
-      rate * (totals.minutes / 60)
-    ).toFixed(2)} руб.)`;
-  },
-);
+  return `${segments.join(' + ')} = ${totals.hours}h ${totals.minutes}m (${(
+    activeProject.rate * totals.hours +
+    activeProject.rate * (totals.minutes / 60)
+  ).toFixed(2)} руб.)`;
+});
 
 sample({
   clock: createNewProject,
