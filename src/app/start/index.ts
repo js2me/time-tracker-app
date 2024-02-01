@@ -9,3 +9,12 @@ sample({
   clock: appStartModel.onAppStart,
   target: [routingModel.initialize],
 });
+
+sample({
+  clock: appStartModel.onAppStarted,
+  target: routingModel.routes.home.navigate.prepend(() => ({
+    params: {},
+    query: {},
+    replace: true,
+  })),
+});
