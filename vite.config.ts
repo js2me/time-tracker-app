@@ -7,6 +7,8 @@ import {default as checker} from 'vite-plugin-checker';
 import {default as eslint} from 'vite-plugin-eslint';
 import svgr from 'vite-plugin-svgr';
 import {createHtmlPlugin as html} from 'vite-plugin-html';
+import {VitePWA} from 'vite-plugin-pwa'
+
 
 import path from 'path';
 
@@ -14,9 +16,12 @@ import {checkFeatureSupport} from './build/utils/check-feature-support';
 import {getBrowsers} from './build/utils/get-browsers';
 import packageJson from './package.json';
 
-dotenv.config();
-
 const isProd = process.env.NODE_ENV === 'production';
+const isPreview = process.env.MODE === 'preview'
+
+dotenv.config({
+  path: !isPreview && isProd ? './.env.production' : './.env'
+});
 
 const browserTargets = browserslist.loadConfig({
   path: path.resolve(__dirname),
@@ -28,7 +33,7 @@ const buildEnvs: BuildEnvVariables = {
   MOCKS: process.env.MOCKS === 'true' || process.env.MOCKS === '1',
   LOGGER: process.env.LOGGER === 'true' || process.env.LOGGER === '1',
   BASE_URL: process.env.PUBLIC_URL || '/',
-  PREVIEW: process.env.MODE === 'preview',
+  PREVIEW: isPreview,
   POLYFILLS: {
     RESIZE_OBSERVER: !checkFeatureSupport('resizeobserver', browserTargets),
   },
@@ -164,6 +169,24 @@ export default defineConfig({
       //   svgo: false,
       //   // svgProps:
       // }
+    }),
+    isProd && VitePWA({
+      manifest: {
+        "background_color": "#ffffff",
+        "theme_color": "#f3f3f3",
+        "description": "Трекаем время, работаем над фрилансом, зарабатываем деньги",
+        "display": "fullscreen",
+        "icons": [
+          {
+            "src": "favicon.png",
+            "sizes": "76x66",
+            "type": "image/png"
+          }
+        ],
+        "name": "Фриланс Тайм Машина",
+        "short_name": "Фриланс Тайм Машина",
+        "start_url": "/"
+      }
     }),
     isProd && eslint(),
     react({
