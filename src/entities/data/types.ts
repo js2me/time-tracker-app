@@ -1,6 +1,7 @@
 export interface Project {
   name: string;
   logs: ProjectLog[];
+  rate: number;
 }
 
 export interface ProjectLog {

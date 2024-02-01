@@ -1,12 +1,11 @@
 import { useStoreMap } from 'effector-react';
-import { Fragment } from 'react';
 import { dataModel, ProjectLog } from '@/entities/data';
 import { hammer } from '@/shared/lib/common/hammer';
-import { sanitizeHtml } from '@/shared/lib/common/html';
+import { Log } from './log';
 
 interface LogGroup {
   label: string;
-  logs: ProjectLog[];
+  logs: (ProjectLog & { index: number })[];
 }
 
 export const Logs = () => {
@@ -21,6 +20,7 @@ export const Logs = () => {
 
       project.logs
         .slice()
+        .map((log, index) => ({ ...log, index }))
         .sort(
           (a, b) =>
             new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
@@ -63,46 +63,7 @@ export const Logs = () => {
             <h1 className={'mb-2 select-text text-lg'}>{group.label}</h1>
             <div className={'flex select-text flex-col'}>
               {group.logs.map((log, i) => {
-                return (
-                  <Fragment key={i}>
-                    <div className={'h-1 w-full hover:bg-reverse'}></div>
-                    <div className={'relative my-0.5 select-text'}>
-                      <div
-                        className={
-                          'absolute left-0 top-0 h-full w-1 select-text rounded-sm bg-accent'
-                        }
-                      />
-                      <span
-                        className={
-                          'ml-3 select-text text-sm text-foreground/70'
-                        }
-                      >
-                        {hammer.format.dateTime(log.startDate, {
-                          format: 'dddd, D, HH:mm A',
-                        })}
-                      </span>
-                      <span
-                        className={'text-foreground/7 0 select-text text-sm'}
-                      >
-                        {` - ${hammer.format.dateTime(log.spentTime, {
-                          format: 'time',
-                          asTime: true,
-                        })} (${hammer.format.dateTime(
-                          Date.now() + log.spentTime,
-                          {
-                            format: 'spent-time',
-                          },
-                        )})`}
-                      </span>
-                      <div
-                        className={'ml-3 select-text'}
-                        dangerouslySetInnerHTML={{
-                          __html: sanitizeHtml(log.meta),
-                        }}
-                      />
-                    </div>
-                  </Fragment>
-                );
+                return <Log key={i} log={log} index={log.index} />;
               })}
             </div>
           </div>

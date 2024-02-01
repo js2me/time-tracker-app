@@ -1,4 +1,5 @@
-import { PlusIcon } from 'lucide-react';
+import { useUnit } from 'effector-react';
+import { Trash } from 'lucide-react';
 import { useLayoutEffect, useRef } from 'react';
 import { dataModel } from '@/entities/data';
 import { toastModel } from '@/shared/_entities/toast';
@@ -13,11 +14,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/ui/dialog';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
 
-export const AddProject = () => {
+export const DeleteLog = ({
+  index,
+  onDelete,
+}: {
+  index: number;
+  onDelete: VoidFunction;
+}) => {
   const [visible, , setVisible] = useToggle(false);
+  const [deleteLog] = useUnit([dataModel.deleteLog]);
   const formRef = useRef<HTMLFormElement>(null);
 
   useLayoutEffect(() => {
@@ -29,14 +35,18 @@ export const AddProject = () => {
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
       <DialogTrigger asChild>
-        <Button variant={'outline'} size={'icon'} className={'shrink-0'}>
-          <PlusIcon className={'h-4 w-4'} />
+        <Button
+          className={'mt-auto h-5 w-5'}
+          size={'icon'}
+          variant={'destructive'}
+        >
+          <Trash className={'h-3 w-3'} />
         </Button>
       </DialogTrigger>
       <DialogContent className={'sm:max-w-[425px]'}>
         <DialogHeader>
-          <DialogTitle>Создание проекта</DialogTitle>
-          <DialogDescription>Создавай давай</DialogDescription>
+          <DialogTitle>Удаление лога</DialogTitle>
+          <DialogDescription>Нужно подтвердить удаление</DialogDescription>
         </DialogHeader>
         <form
           ref={formRef}
@@ -45,38 +55,30 @@ export const AddProject = () => {
             e.stopPropagation();
 
             const form = formRef.current!;
-            const formData = Object.fromEntries(
-              new FormData(form),
-            ) as AnyObject;
 
-            dataModel.createNewProject({
-              logs: [],
-              rate: 0,
-              name: formData.name,
-            });
+            deleteLog({ index });
             form.reset();
+            onDelete();
             setVisible(false);
             toastModel.create({
               type: 'success',
-              message: 'Проект успешно сделан!',
+              message: 'Лог удалён!',
             });
           }}
         >
-          <div className={'grid gap-4 py-4'}>
-            <div className={'grid grid-cols-4 items-center gap-4'}>
-              <Label htmlFor={'name'} className={'text-right'}>
-                Имя
-              </Label>
-              <Input
-                id={'name'}
-                name={'name'}
-                required
-                className={'col-span-3'}
-              />
-            </div>
-          </div>
           <DialogFooter>
-            <Button type={'submit'}>Создать</Button>
+            <Button type={'submit'} variant={'destructive'}>
+              УДАЛИТЬ
+            </Button>
+            <Button
+              type={'button'}
+              variant={'ghost'}
+              onClick={() => {
+                setVisible(false);
+              }}
+            >
+              НЕ НАДО
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

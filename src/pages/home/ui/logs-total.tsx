@@ -7,6 +7,6 @@ export const LogsTotal = () => {
   if (!totalLabel) return null;
 
   return (
-    <div className={'select-text text-sm font-semibold'}>{totalLabel}</div>
+    <div className={'select-text p-1 text-sm font-semibold'}>{totalLabel}</div>
   );
 };

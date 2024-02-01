@@ -8,8 +8,10 @@ import {
 import { condition, empty, not } from 'patronum';
 import { LogRaw, Project, ProjectLog } from '@/entities/data';
 import { appStartModel } from '@/shared/_entities/app-starter';
+import { clipboardModel } from '@/shared/_entities/clipboard';
 import { toastModel } from '@/shared/_entities/toast';
 import { hammer } from '@/shared/lib/common/hammer';
+import { sanitizeHtml } from '@/shared/lib/common/html';
 import { ms } from '@/shared/lib/common/ms';
 import { createTimerModel } from '@/shared/lib/effector/timer-model';
 import { createValueModel } from '@/shared/lib/effector/value-model';
@@ -42,6 +44,12 @@ export const setActiveProject = activeProject.set as EventCallable<Project>;
 
 export const $hasActiveLog = not(activeLog.$empty);
 
+export const $hasActiveProject = not(activeProject.$empty);
+
+export const $activeProjectName = activeProject.$value.map(
+  (project) => project?.name || '',
+);
+
 export const $activeLogIsActive = activeLog.$value.map(
   (log) => !!log && log.status === 'active',
 );
@@ -61,6 +69,9 @@ export const pauseActiveLog = createEvent();
 export const continueActiveLog = createEvent();
 
 export const createNewProject = projects.add;
+
+export const changeLog = createEvent<ProjectLog & { index: number }>();
+export const deleteLog = createEvent<{ index: number }>();
 
 export const $logsLabels = combine(
   rate.$value,
@@ -300,6 +311,77 @@ sample({
 export const copyDataToClipboard = createEvent();
 
 sample({
-  clock: copyDataToClipboard,
-  source: $logsLabels,
+  clock: sample({
+    clock: copyDataToClipboard,
+    source: [$logsLabels, activeProject.$value] as const,
+    fn: ([logLabels, project]) => {
+      if (!project) return null;
+
+      return `
+${logLabels}
+
+${project.logs
+  .map((log) => {
+    const doc = new DOMParser().parseFromString(
+      sanitizeHtml(log.meta),
+      'text/html',
+    );
+    const meta = doc.body.textContent || '';
+
+    return `${hammer.format.dateTime(log.startDate, {
+      format: 'full',
+    })} - ${hammer.format.dateTime(log.spentTime, {
+      format: 'time-short',
+      asTime: true,
+    })} - ${meta}`;
+  })
+  .join('\n')}
+`;
+    },
+  }),
+  filter: Boolean,
+  target: [
+    clipboardModel.copyFx,
+    toastModel.create.prepend(() => ({
+      message: 'Скопировано',
+    })),
+  ],
+});
+
+sample({
+  clock: sample({
+    clock: changeLog,
+    source: activeProject.$value,
+    fn: (project, { index: indexToUpdate, ...log }) => {
+      if (!project) return null;
+
+      return {
+        ...project,
+        logs: project.logs.map((data, i) => {
+          if (i === indexToUpdate) return { ...log };
+
+          return data;
+        }),
+      };
+    },
+  }),
+  filter: Boolean,
+  target: activeProject.set,
+});
+
+sample({
+  clock: sample({
+    clock: deleteLog,
+    source: activeProject.$value,
+    fn: (project, { index: indexToDelete }) => {
+      if (!project) return null;
+
+      return {
+        ...project,
+        logs: project.logs.filter((_, i) => i !== indexToDelete),
+      };
+    },
+  }),
+  filter: Boolean,
+  target: activeProject.set,
 });

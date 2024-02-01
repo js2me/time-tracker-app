@@ -1,4 +1,6 @@
+import { useUnit } from 'effector-react';
 import { BaseTemplate } from '@/widgets/templates';
+import { dataModel } from '@/entities/data';
 import { ActiveLogCard } from './active-log-card';
 import { ActiveProjectSelector } from './active-project-selector';
 import { AddProject } from './add-project';
@@ -9,6 +11,8 @@ import { RateInput } from './rate-input';
 import { ResetTracking } from './reset-tracking';
 
 export const HomePage = () => {
+  const hasActiveProject = useUnit(dataModel.$hasActiveProject);
+
   return (
     <BaseTemplate className={'flex flex-col'}>
       <div>
@@ -26,10 +30,12 @@ export const HomePage = () => {
           </div>
         </div>
         <ActiveLogCard className={'mb-6 mr-auto mt-10 w-full'} />
-        <div className={'mb-4 flex flex-row justify-end gap-2'}>
-          <ResetTracking />
-          <CopyData />
-        </div>
+        {hasActiveProject && (
+          <div className={'mb-4 flex flex-row justify-end gap-2'}>
+            <ResetTracking />
+            <CopyData />
+          </div>
+        )}
         <LogsTotal />
         <Logs />
       </div>

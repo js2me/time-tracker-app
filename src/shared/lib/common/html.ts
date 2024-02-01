@@ -104,8 +104,11 @@ const insaneConfig = {
   transformText: null,
 };
 
-export const sanitizeHtml = (html: Maybe<string>) => {
-  return insane(html || '', insaneConfig);
+export const sanitizeHtml = (html: Maybe<string>, cfg?: AnyObject) => {
+  return insane(html || '', {
+    ...insaneConfig,
+    ...cfg,
+  });
 };
 
 export const checkElementHasParent = (

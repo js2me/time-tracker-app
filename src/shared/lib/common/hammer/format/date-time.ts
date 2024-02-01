@@ -39,6 +39,7 @@ export const dateTime = function (
       | 'month'
       | 'spent-time'
       | 'time'
+      | 'time-short'
       | string;
     pattern?: string;
     asTime?: boolean;
@@ -69,6 +70,8 @@ export const dateTime = function (
       return value.format('DD MMM HH:mm');
     case 'time':
       return value.format('HH:mm:ss');
+    case 'time-short':
+      return value.format('HH:mm');
     case 'day':
       return value.format('DD MMM YYYY');
     case 'month':

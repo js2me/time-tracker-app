@@ -3,16 +3,18 @@ import { dataModel } from '@/entities/data';
 import { Input } from '@/shared/ui/input';
 
 export const RateInput = () => {
-  const rate = useUnit(dataModel.rate);
+  const activeProject = useUnit(dataModel.activeProject);
+
+  if (!activeProject.value) return null;
 
   return (
     <Input
       type={'number'}
       placeholder={'0'}
       className={'max-w-[140px]'}
-      value={rate.value || ''}
+      value={activeProject.value.rate || ''}
       onChange={(e) => {
-        rate.set(+e.target.value || 0);
+        activeProject.update({ rate: +e.target.value || 0 });
       }}
     />
   );
