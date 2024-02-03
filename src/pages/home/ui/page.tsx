@@ -7,6 +7,7 @@ import { AddProject } from './add-project';
 import { CopyData } from './copy-data';
 import { Logs } from './logs';
 import { LogsTotal } from './logs-total';
+import { ManualAddLog } from './manual-add-log';
 import { RateInput } from './rate-input';
 import { ResetTracking } from './reset-tracking';
 
@@ -31,7 +32,9 @@ export const HomePage = () => {
         </div>
         <ActiveLogCard className={'mb-6 mr-auto mt-10 w-full'} />
         {hasActiveProject && (
-          <div className={'mb-4 flex flex-row justify-end gap-2'}>
+          <div className={'mb-4 flex flex-1 flex-row gap-2'}>
+            <ManualAddLog className={'mr-auto'} />
+
             <ResetTracking />
             <CopyData />
           </div>

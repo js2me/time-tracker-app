@@ -90,7 +90,11 @@ export const $logsLabels = combine(activeProject.$value, (activeProject) => {
     if (dur.hours || dur.minutes) {
       totals.hours += dur.hours;
       totals.minutes += dur.minutes;
-      segments.push(`${dur.hours}h ${dur.minutes}m`);
+      segments.push(
+        [dur.hours && `${dur.hours}h`, dur.minutes && `${dur.minutes}m`]
+          .filter(Boolean)
+          .join(' '),
+      );
     }
   });
 
@@ -192,6 +196,17 @@ sample({
 });
 
 sample({
+  clock: activeValidLogFinished,
+  target: toastModel.create.prepend(
+    ({ activeProject }: { activeProject: Project }) => ({
+      type: 'success',
+      message: 'Хорошая работа!',
+      description: `Лог добавлен в проект "${activeProject.name}"`,
+    }),
+  ),
+});
+
+sample({
   clock: sample({
     clock: pauseActiveLog,
     source: [activeProject.$value, activeLog.$value] as const,
@@ -230,7 +245,7 @@ sample({
   target: activeLog.update.prepend((log: LogRaw) => {
     const lastTickDate = log.lastTickDate;
 
-    if (lastTickDate !== null && Date.now() - lastTickDate > ms(2, 'sec')) {
+    if (lastTickDate !== null && Date.now() - lastTickDate > ms(1.5, 'sec')) {
       return {
         spentTime: log.spentTime + (Date.now() - lastTickDate),
         lastTickDate: Date.now(),
@@ -238,7 +253,7 @@ sample({
     }
 
     return {
-      spentTime: log.spentTime + 1000,
+      spentTime: log.spentTime + ms(1, 'sec'),
       lastTickDate: Date.now(),
     };
   }),
@@ -248,10 +263,10 @@ activeLog.$value.watch((log) => {
   if (!log) {
     document.title = `Фриланс Тайм Машина`;
   } else if (log.status === 'active') {
-    document.title = `Фрилансим (${hammer.format.dateTime(log.spentTime, {
+    document.title = `${hammer.format.dateTime(log.spentTime, {
       format: 'time',
       asTime: true,
-    })})`;
+    })} Фрилансим`;
   } else if (log.status === 'paused') {
     document.title = `Фриланс на паузе (${hammer.format.dateTime(
       log.spentTime,

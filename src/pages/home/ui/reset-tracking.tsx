@@ -1,3 +1,4 @@
+import { useStoreMap } from 'effector-react';
 import { EraserIcon } from 'lucide-react';
 import { useLayoutEffect, useRef } from 'react';
 import { dataModel } from '@/entities/data';
@@ -17,6 +18,7 @@ import {
 export const ResetTracking = () => {
   const [visible, , setVisible] = useToggle(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const disabled = useStoreMap(dataModel.$logsLabels, (labels) => !labels);
 
   useLayoutEffect(() => {
     if (!visible) {
@@ -26,8 +28,13 @@ export const ResetTracking = () => {
 
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
-      <DialogTrigger asChild>
-        <Button variant={'outline'} size={'icon'} className={'shrink-0'}>
+      <DialogTrigger asChild disabled={disabled}>
+        <Button
+          variant={'outline'}
+          size={'icon'}
+          className={'shrink-0'}
+          disabled={disabled}
+        >
           <EraserIcon className={'h-4 w-4'} />
         </Button>
       </DialogTrigger>

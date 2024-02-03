@@ -1,4 +1,4 @@
-import { BadgePlus } from 'lucide-react';
+import { CircleFadingPlus } from 'lucide-react';
 import { useLayoutEffect, useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { dataModel } from '@/entities/data';
@@ -32,11 +32,11 @@ export const ManualAddLog = ({ className }: { className?: string }) => {
     <Dialog open={visible} onOpenChange={setVisible}>
       <DialogTrigger asChild>
         <Button
-          variant={'ghost'}
+          variant={'outline'}
           size={'icon'}
-          className={twMerge('h-7 w-7', className)}
+          className={twMerge('shrink-0', className)}
         >
-          <BadgePlus className={'h-4 w-4'} />
+          <CircleFadingPlus className={'h-4 w-4'} />
         </Button>
       </DialogTrigger>
       <DialogContent className={'sm:max-w-[425px]'}>

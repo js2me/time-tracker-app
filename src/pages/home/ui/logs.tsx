@@ -60,7 +60,13 @@ export const Logs = () => {
       {groupedLogs.map((group) => {
         return (
           <div key={group.label} className={'relative select-text py-4'}>
-            <h1 className={'mb-2 select-text text-lg'}>{group.label}</h1>
+            <h1
+              className={
+                'sticky top-0 z-10 mb-2 select-text bg-custom-background/50 text-lg backdrop-blur-md'
+              }
+            >
+              {group.label}
+            </h1>
             <div className={'flex select-text flex-col'}>
               {group.logs.map((log, i) => {
                 return <Log key={i} log={log} index={log.index} />;
