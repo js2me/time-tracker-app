@@ -186,6 +186,11 @@ export default defineConfig({
             "src": "logo.png",
             "sizes": "391x391",
             "type": "image/png"
+          },
+          {
+            "src": "logo-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
           }
         ],
         "name": "Фриланс Тайм Машина",
