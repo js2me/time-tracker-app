@@ -1,5 +1,5 @@
-export const rootElement = document.getElementById('root') as HTMLElement;
-export const portalElement = document.getElementById('portal') as HTMLElement;
-export const scopeElement = document.getElementById('scope') as HTMLElement;
+export const rootElement = document.querySelector('#root') as HTMLElement;
+export const portalElement = document.querySelector('#portal') as HTMLElement;
+export const scopeElement = document.querySelector('#scope') as HTMLElement;
 export const bodyElement = document.body;
 export const htmlElement = document.body.parentElement!;

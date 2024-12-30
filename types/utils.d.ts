@@ -21,12 +21,8 @@ type FalsyValues = undefined | null | '' | false | 0;
 
 type MaybeFalsy<T> = Maybe<T> | FalsyValues;
 
-type RecordEntries<T extends AnyObject> = T extends Record<
-  infer Keys,
-  infer Values
->
-  ? [Keys, Values][]
-  : never;
+type RecordEntries<T extends AnyObject> =
+  T extends Record<infer Keys, infer Values> ? [Keys, Values][] : never;
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I,

@@ -1,33 +1,24 @@
-import { useUnit } from 'effector-react';
-import { FC } from 'react';
-import { Router } from '@/routing';
-import { BaseTemplateLoader } from '@/widgets/templates';
-import { appStartModel, useAppStarter } from '@/shared/_entities/app-starter';
-import { DialogsContainer } from '@/shared/_entities/dialog';
+import { observer } from 'mobx-react-lite';
+import { ErrorBoundary } from 'react-simple-error-boundary';
+import { Route, Router, Switch } from 'wouter';
+
+import { HomePage } from '@/pages/home';
+import { NotFoundPage } from '@/pages/not-found';
 import { Toaster } from '@/shared/ui/sonner';
 import { TooltipProvider } from '@/shared/ui/tooltip';
 
-import './start';
-
-export const App: FC = () => {
-  const appStarted = useUnit(appStartModel.$appStarted);
-
-  useAppStarter();
-
+export const App = observer(() => {
   return (
-    <>
-      <TooltipProvider>
-        {appStarted ? (
-          <>
-            <Router>
-              <DialogsContainer />
-            </Router>
-          </>
-        ) : (
-          <BaseTemplateLoader />
-        )}
-        <Toaster position={'bottom-center'} />
-      </TooltipProvider>
-    </>
+    <TooltipProvider>
+      <ErrorBoundary>
+        <Router base={import.meta.env.BASE_URL}>
+          <Switch>
+            <Route path={'/'} component={HomePage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Router>
+      </ErrorBoundary>
+      <Toaster position={'bottom-center'} />
+    </TooltipProvider>
   );
-};
+});
