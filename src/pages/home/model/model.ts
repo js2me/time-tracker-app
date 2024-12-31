@@ -1,4 +1,4 @@
-import { computed, reaction, runInAction } from 'mobx';
+import { autorun, computed, reaction, runInAction } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
 import { formatDate } from 'yammies/date-time';
 
@@ -21,25 +21,26 @@ export class HomePageVM extends PageViewModelImpl {
   mount(): void {
     super.mount();
 
-    reaction(
-      () => this.data.activeLog,
-      (log) => {
-        if (!log) {
+    autorun(
+      () => {
+        if (!this.data.activeLog) {
           document.title = `Фриланс Тайм Машина`;
-        } else if (log.status === 'active') {
-          document.title = `${formatDate(log.spentTime, {
+        } else if (this.data.activeLog.status === 'active') {
+          document.title = `${formatDate(this.data.activeLog.spentTime, {
             format: 'time',
             asTime: true,
           })} Фрилансим`;
-        } else if (log.status === 'paused') {
-          document.title = `Фриланс на паузе (${formatDate(log.spentTime, {
-            format: 'time',
-            asTime: true,
-          })})`;
+        } else if (this.data.activeLog.status === 'paused') {
+          document.title = `Фриланс на паузе (${formatDate(
+            this.data.activeLog.spentTime,
+            {
+              format: 'time',
+              asTime: true,
+            },
+          )})`;
         }
       },
       {
-        fireImmediately: true,
         signal: this.unmountSignal,
       },
     );
