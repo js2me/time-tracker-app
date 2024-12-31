@@ -1,398 +1,307 @@
-import {
-  combine,
-  createEvent,
-  EventCallable,
-  EventPayload,
-  sample,
-} from 'effector';
-import { condition, empty, not } from 'patronum';
-import { LogRaw, Project, ProjectLog } from '@/entities/data';
-import { appStartModel } from '@/shared/_entities/app-starter';
-import { clipboardModel } from '@/shared/_entities/clipboard';
-import { toastModel } from '@/shared/_entities/toast';
-import { hammer } from '@/shared/lib/common/hammer';
-import { sanitizeHtml } from '@/shared/lib/common/html';
-import { ms } from '@/shared/lib/common/ms';
-import { createTimerModel } from '@/shared/lib/effector/timer-model';
-import { createValueModel } from '@/shared/lib/effector/value-model';
+import { action, computed, observable, reaction } from 'mobx';
+import { Ticker } from 'mobx-shared-entities/ticker';
+import { formatDate, timeDuration } from 'yammies/date-time';
+import { sanitizeHtml } from 'yammies/html';
+import { ms } from 'yammies/ms';
 
-export const rate = createValueModel<number>(0, {
-  cache: { type: 'local', key: 'rate' },
-});
+import { StorageModel } from '@/shared/lib/mobx/storage';
 
-export const projects = createValueModel<Project>([], {
-  type: 'list',
-  cache: { type: 'local', key: 'projects' },
-});
+import { LogRaw, Project, ProjectLog } from './model.types';
 
-export const activeProject = createValueModel<Project | null>(null, {
-  type: 'struct',
-  cache: { type: 'local', key: 'active-project' },
-});
+export class DataModel {
+  private storage: StorageModel;
+  private ticker: Ticker;
 
-export const activeLog = createValueModel<LogRaw | null>(null, {
-  type: 'struct',
-  cache: { type: 'local', key: 'active-log' },
-});
+  @observable
+  accessor projects: Project[] = [];
 
-const timer = createTimerModel({
-  tickDelay: 1000,
-  maxTicks: Infinity,
-});
+  @observable
+  accessor activeProject: Project | null = null;
 
-export const setActiveProject = activeProject.set as EventCallable<Project>;
+  @observable
+  accessor activeLog: LogRaw | null = null;
 
-export const $hasActiveLog = not(activeLog.$empty);
-
-export const $hasActiveProject = not(activeProject.$empty);
-
-export const $activeProjectName = activeProject.$value.map(
-  (project) => project?.name || '',
-);
-
-export const $activeLogIsActive = activeLog.$value.map(
-  (log) => !!log && log.status === 'active',
-);
-
-export const $activeLogTime = activeLog.$value.map(
-  (value) => value?.spentTime || 0,
-);
-
-export const createActiveLog = activeLog.set as EventCallable<LogRaw>;
-
-export const addLogToActiveProject = createEvent<ProjectLog>();
-
-export const finishActiveLog = createEvent();
-
-export const pauseActiveLog = createEvent();
-
-export const continueActiveLog = createEvent();
-
-export const createNewProject = projects.add;
-
-export const changeLog = createEvent<ProjectLog & { index: number }>();
-export const deleteLog = createEvent<{ index: number }>();
-
-export const $logsLabels = combine(activeProject.$value, (activeProject) => {
-  if (!activeProject) return '';
-
-  if (!activeProject.logs.length) return '';
-
-  const segments = [] as string[];
-
-  const totals = {
-    hours: 0,
-    minutes: 0,
-  };
-
-  activeProject.logs.forEach((log) => {
-    const dur = hammer.parser.msDuration(log.spentTime);
-    if (dur.hours || dur.minutes) {
-      totals.hours += dur.hours;
-      totals.minutes += dur.minutes;
-      segments.push(
-        [dur.hours && `${dur.hours}h`, dur.minutes && `${dur.minutes}m`]
-          .filter(Boolean)
-          .join(' '),
-      );
-    }
-  });
-
-  totals.hours += Math.floor(totals.minutes / 60);
-  totals.minutes = Math.floor(totals.minutes % 60);
-
-  return `${segments.join(' + ')} = ${totals.hours}h ${totals.minutes}m (${(
-    activeProject.rate * totals.hours +
-    activeProject.rate * (totals.minutes / 60)
-  ).toFixed(2)} руб.)`;
-});
-
-sample({
-  clock: createNewProject,
-  filter: empty(activeProject.$value),
-  target: setActiveProject,
-});
-
-sample({
-  clock: createActiveLog,
-  filter: (log) => log.status === 'active',
-  target: timer.start,
-});
-
-const activeLogFinished = sample({
-  clock: sample({
-    clock: finishActiveLog,
-    source: [projects.$value, activeProject.$value, activeLog.$value] as const,
-    fn: ([projects, activeProject, log]) =>
-      log && activeProject && projects
-        ? { log, activeProject, projects }
-        : null,
-  }),
-  filter: Boolean,
-});
-
-const activeValidLogFinished =
-  createEvent<EventPayload<typeof activeLogFinished>>();
-
-condition({
-  source: activeLogFinished,
-  if: ({ log }) => log.spentTime <= ms(1, 'min'),
-  then: toastModel.create.prepend(() => ({
-    type: 'error',
-    message: 'Слишком мало времени на один лог.',
-    description: 'Нужно логировать как минимум 1 минуту',
-  })),
-  else: activeValidLogFinished,
-});
-
-sample({
-  clock: activeValidLogFinished,
-  filter: ({ activeProject, log }) => log.projectName === activeProject.name,
-  target: activeProject.update.prepend(
-    ({ activeProject, log }: EventPayload<typeof activeLogFinished>) => {
-      return {
-        logs: [
-          ...(activeProject.logs || []),
-          {
-            startDate: log.startDate,
-            spentTime: log.spentTime,
-            meta: log.meta,
-          },
-        ],
-      };
-    },
-  ),
-});
-
-sample({
-  clock: activeValidLogFinished,
-  filter: ({ activeProject, log }) => log.projectName !== activeProject.name,
-  target: projects.set.prepend(
-    ({ projects, log }: EventPayload<typeof activeLogFinished>) => {
-      return projects.map((project) => {
-        if (project.name === log.projectName) {
-          return {
-            ...project,
-            logs: [
-              ...(project.logs || []),
-              {
-                startDate: log.startDate,
-                spentTime: log.spentTime,
-                meta: log.meta,
-              },
-            ],
-          };
-        }
-
-        return project;
-      });
-    },
-  ),
-});
-
-sample({
-  clock: activeLogFinished,
-  target: [activeLog.reset, timer.stop],
-});
-
-sample({
-  clock: activeValidLogFinished,
-  target: toastModel.create.prepend(
-    ({ activeProject }: { activeProject: Project }) => ({
-      type: 'success',
-      message: 'Хорошая работа!',
-      description: `Лог добавлен в проект "${activeProject.name}"`,
-    }),
-  ),
-});
-
-sample({
-  clock: sample({
-    clock: pauseActiveLog,
-    source: [activeProject.$value, activeLog.$value] as const,
-    fn: ([project, log]) => (log && project ? { log, project } : null),
-  }),
-  filter: Boolean,
-  target: [
-    activeLog.update.prepend(() => ({
-      status: 'paused',
-      lastTickDate: Date.now(),
-    })),
-    timer.stop,
-  ],
-});
-
-sample({
-  clock: sample({
-    clock: continueActiveLog,
-    source: [activeProject.$value, activeLog.$value] as const,
-    fn: ([project, log]) => (log && project ? { log, project } : null),
-  }),
-  filter: Boolean,
-  target: [
-    activeLog.update.prepend(() => ({
-      status: 'active',
-      lastTickDate: Date.now(),
-    })),
-    timer.start,
-  ],
-});
-
-sample({
-  clock: timer.tick,
-  source: activeLog.$value,
-  filter: Boolean,
-  target: activeLog.update.prepend((log: LogRaw) => {
-    const lastTickDate = log.lastTickDate;
-
-    if (lastTickDate !== null && Date.now() - lastTickDate > ms(1.5, 'sec')) {
-      return {
-        spentTime: log.spentTime + (Date.now() - lastTickDate),
-        lastTickDate: Date.now(),
-      };
-    }
-
-    return {
-      spentTime: log.spentTime + ms(1, 'sec'),
-      lastTickDate: Date.now(),
-    };
-  }),
-});
-
-activeLog.$value.watch((log) => {
-  if (!log) {
-    document.title = `Фриланс Тайм Машина`;
-  } else if (log.status === 'active') {
-    document.title = `${hammer.format.dateTime(log.spentTime, {
-      format: 'time',
-      asTime: true,
-    })} Фрилансим`;
-  } else if (log.status === 'paused') {
-    document.title = `Фриланс на паузе (${hammer.format.dateTime(
-      log.spentTime,
-      {
-        format: 'time',
-        asTime: true,
-      },
-    )})`;
-  }
-});
-
-sample({
-  clock: appStartModel.onAppStarted,
-  source: activeLog.$value,
-  filter: (log) => !!log && log.status === 'active',
-  target: timer.start,
-});
-
-sample({
-  clock: sample({
-    clock: activeProject.$value,
-    filter: Boolean,
-  }),
-  source: projects.$value,
-  fn: (projects, activeProject) => {
-    return projects.map((project) => {
-      if (project.name === activeProject.name) {
-        return { ...activeProject };
-      }
-      return project;
+  constructor(
+    private rootStore: RootStore,
+    private abortSignal?: AbortSignal,
+  ) {
+    this.storage = new StorageModel();
+    this.ticker = new Ticker({
+      ticksPer: ms(1, 'sec'),
+      abortSignal: this.abortSignal,
     });
-  },
-  target: projects.set,
-});
 
-sample({
-  clock: sample({
-    clock: addLogToActiveProject,
-    source: activeProject.$value,
-    fn: (project, log) => {
-      if (!project) return null;
+    this.storage.syncProperty(this, 'projects', { key: '$store_projects'});
+    this.storage.syncProperty(this, 'activeProject', { key: '$store_active-project' });
+    this.storage.syncProperty(this, 'activeLog', { key: '$store_active-log' });
 
-      return {
-        ...project,
-        logs: [...project.logs, log],
-      };
-    },
-  }),
-  filter: Boolean,
-  target: activeProject.update,
-});
+    if (this.activeLog?.status === 'active') {
+      this.ticker.start();
+    }
+    reaction(() => this.ticker.ticks, this.handleTick);
+    reaction(() => this.activeProject, this.handleActiveProjectChanged);
+  }
 
-export const copyDataToClipboard = createEvent();
+  get hasActiveLog() {
+    return this.activeLog != null;
+  }
 
-sample({
-  clock: sample({
-    clock: copyDataToClipboard,
-    source: [$logsLabels, activeProject.$value] as const,
-    fn: ([logLabels, project]) => {
-      if (!project) return null;
+  get hasActiveProject() {
+    return this.activeProject != null;
+  }
 
-      return `
-${logLabels}
+  get activeProjectName() {
+    return this.activeProject?.name ?? '';
+  }
 
-${project.logs
+  get isActiveLogActive() {
+    return this.activeLog?.status === 'active';
+  }
+
+  get activeLogTime() {
+    return this.activeLog?.spentTime ?? 0;
+  }
+
+  @computed
+  get logsLabels() {
+    if (!this.activeProject) return '';
+
+    if (this.activeProject.logs.length === 0) return '';
+
+    const segments = [] as string[];
+
+    const totals = {
+      hours: 0,
+      minutes: 0,
+    };
+
+    this.activeProject.logs.forEach((log) => {
+      const dur = timeDuration(log.spentTime);
+
+      if (dur.hours || dur.minutes) {
+        totals.hours += dur.hours;
+        totals.minutes += dur.minutes;
+        segments.push(
+          [dur.hours && `${dur.hours}h`, dur.minutes && `${dur.minutes}m`]
+            .filter(Boolean)
+            .join(' '),
+        );
+      }
+    });
+
+    totals.hours += Math.floor(totals.minutes / 60);
+    totals.minutes = Math.floor(totals.minutes % 60);
+
+    return `${segments.join(' + ')} = ${totals.hours}h ${totals.minutes}m (${(
+      this.activeProject.rate * totals.hours +
+      this.activeProject.rate * (totals.minutes / 60)
+    ).toFixed(2)} руб.)`;
+  }
+
+  @computed
+  get hasLogsLabels() {
+    return !!this.logsLabels;
+  }
+
+  @action.bound
+  setActiveProject(project: Project) {
+    this.activeProject = project;
+  }
+
+  @action.bound
+  addLogToActiveProject(log: ProjectLog) {
+    if (!this.activeProject) return;
+
+    this.activeProject.logs.push(log);
+
+    this.rootStore.toasts.create({
+      type: 'success',
+      message: 'Лог добавлен!',
+    });
+  }
+
+  @action.bound
+  finishActiveLog() {
+    if (!this.activeLog || !this.activeProject || !this.projects) {
+      return;
+    }
+
+    if (this.activeLog.spentTime <= ms(1, 'min')) {
+      this.rootStore.toasts.create({
+        type: 'error',
+        message: 'Слишком мало времени на один лог.',
+        description: 'Нужно логировать как минимум 1 минуту',
+      });
+      this.activeLog = null;
+      this.ticker.reset();
+      return;
+    }
+
+    const projectByActiveLog = this.projects.find(
+      (project) => project.name === this.activeLog?.projectName,
+    );
+
+    if (projectByActiveLog) {
+      projectByActiveLog.logs.push({
+        startDate: this.activeLog.startDate,
+        spentTime: this.activeLog.spentTime,
+        meta: this.activeLog.meta,
+      });
+      this.rootStore.toasts.create({
+        type: 'success',
+        message: 'Хорошая работа!',
+        description: `Лог добавлен в проект "${projectByActiveLog.name}"`,
+      });
+    }
+
+    this.activeLog = null;
+    this.ticker.reset();
+  }
+
+  @action.bound
+  pauseActiveLog() {
+    if (this.activeLog && this.activeProject) {
+      this.activeLog.status = 'paused';
+      this.activeLog.lastTickDate = Date.now();
+      this.ticker.stop();
+    }
+  }
+
+  @action.bound
+  continueActiveLog() {
+    if (this.activeLog && this.activeProject) {
+      this.activeLog.status = 'active';
+      this.activeLog.lastTickDate = Date.now();
+      this.ticker.start();
+    }
+  }
+
+  @action.bound
+  createNewProject(project: Project) {
+    this.projects.push({ ...project });
+    this.activeProject = { ...project };
+
+    this.rootStore.toasts.create({
+      type: 'success',
+      message: 'Проект успешно сделан!',
+    });
+  }
+
+  @action.bound
+  setRateForActiveProject(rate: number) {
+    if (this.activeProject) {
+      this.activeProject.rate = rate;
+    }
+  }
+
+  @action.bound
+  resetLogsForActiveProject() {
+    if (this.activeProject) {
+      this.activeProject.logs = [];
+      this.rootStore.toasts.create({
+        type: 'success',
+        message: 'Всё сброшено!',
+      });
+    }
+  }
+
+  @action.bound
+  createActiveLog(log: LogRaw) {
+    this.activeLog = log;
+    if (this.activeLog.status === 'active') {
+      this.ticker.start();
+    }
+  }
+
+  @action.bound
+  udpateActiveLog(log: Partial<LogRaw>) {
+    if (this.activeLog) {
+      Object.assign(this.activeLog, log);
+    }
+  }
+
+  @action.bound
+  setLog(log: ProjectLog & { index: number }) {
+    if (!this.activeProject) {
+      return;
+    }
+
+    this.activeProject.logs[log.index] = { ...log };
+  }
+
+  @action.bound
+  deleteLog(index: number) {
+    if (!this.activeProject) {
+      return;
+    }
+
+    this.activeProject.logs = this.activeProject.logs.filter(
+      (_, logIndex) => logIndex !== index,
+    );
+
+    this.rootStore.toasts.create({
+      type: 'success',
+      message: 'Лог удалён!',
+    });
+  }
+
+  copyDataToClipboard = () => {
+    if (!this.activeProject) {
+      return;
+    }
+
+    const textToClipboard = `
+${this.logsLabels}
+
+${this.activeProject.logs
   .map((log) => {
     const doc = new DOMParser().parseFromString(
       sanitizeHtml(log.meta),
       'text/html',
     );
-    const meta = doc.body.textContent || '';
+    const meta = doc.body.textContent ?? '';
 
-    return `${hammer.format.dateTime(log.startDate, {
+    return `${formatDate(log.startDate, {
       format: 'full',
-    })} - ${hammer.format.dateTime(log.spentTime, {
+    })} - ${formatDate(log.spentTime, {
       format: 'time-short',
       asTime: true,
     })} - ${meta}`;
   })
   .join('\n')}
 `;
-    },
-  }),
-  filter: Boolean,
-  target: [
-    clipboardModel.copyFx,
-    toastModel.create.prepend(() => ({
-      message: 'Скопировано',
-    })),
-  ],
-});
 
-sample({
-  clock: sample({
-    clock: changeLog,
-    source: activeProject.$value,
-    fn: (project, { index: indexToUpdate, ...log }) => {
-      if (!project) return null;
+    navigator.clipboard.writeText(textToClipboard);
+    this.rootStore.toasts.create({
+      message: 'Скопировано в буфер обмена',
+    });
+  };
 
-      return {
-        ...project,
-        logs: project.logs.map((data, i) => {
-          if (i === indexToUpdate) return { ...log };
+  @action
+  private handleTick = () => {
+    if (this.activeLog) {
+      const lastTickDate = this.activeLog.lastTickDate;
 
-          return data;
-        }),
-      };
-    },
-  }),
-  filter: Boolean,
-  target: activeProject.set,
-});
+      if (lastTickDate !== null && Date.now() - lastTickDate > ms(1.5, 'sec')) {
+        this.activeLog.spentTime =
+          this.activeLog.spentTime + (Date.now() - lastTickDate);
+      } else {
+        this.activeLog.spentTime = this.activeLog.spentTime + ms(1, 'sec');
+      }
 
-sample({
-  clock: sample({
-    clock: deleteLog,
-    source: activeProject.$value,
-    fn: (project, { index: indexToDelete }) => {
-      if (!project) return null;
+      this.activeLog.lastTickDate = Date.now();
+    }
+  };
 
-      return {
-        ...project,
-        logs: project.logs.filter((_, i) => i !== indexToDelete),
-      };
-    },
-  }),
-  filter: Boolean,
-  target: activeProject.set,
-});
+  @action
+  private handleActiveProjectChanged = (projectUpdate: Maybe<Project>) => {
+    if (!projectUpdate) return;
+
+    for (const project of this.projects) {
+      if (project.name === projectUpdate.name) {
+        Object.assign(project, projectUpdate);
+        return;
+      }
+    }
+  };
+}

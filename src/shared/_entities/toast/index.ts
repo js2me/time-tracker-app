@@ -1,3 +1,2 @@
-import * as toastModel from './model';
-
-export { toastModel };
+export * from './model.types';
+export * from './model';

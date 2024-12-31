@@ -5,8 +5,8 @@ export const parse = () => {
     .map(function (cookieString) {
       return cookieString.trim().split('=');
     })
-    .reduce<AnyObject>(function (acc, curr) {
-      acc[curr[0]] = curr[1];
+    .reduce<AnyObject>(function (acc, current) {
+      acc[current[0]] = current[1];
       return acc;
     }, {});
 };

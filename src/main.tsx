@@ -1,18 +1,18 @@
 /* eslint-disable import/order */
-import './bootstrap';
-
 import '@/app/styles/globals.css';
-import '@/routing';
 
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { rootElement } from '@/shared/config/dom';
 
-import '@/widgets/templates';
-import '@/entities';
-import '@/features';
-import '@/pages';
-
 import { App } from '@/app';
+import { ViewModelsProvider } from 'mobx-vm-entities';
+import { rootStore } from './shared/store';
+import { RootStoreProvider } from './shared/lib/mobx/root-store';
 
-createRoot(rootElement).render(<App />);
+createRoot(rootElement).render(
+  <RootStoreProvider value={rootStore}>
+    <ViewModelsProvider value={rootStore.viewModels}>
+      <App />
+    </ViewModelsProvider>
+  </RootStoreProvider>,
+);

@@ -1,4 +1,6 @@
-import * as homePageModel from './model';
+import { withPageViewModel } from 'mobx-wouter';
 
-export * from './ui';
-export { homePageModel };
+import { HomePageVM } from './model';
+import { HomePageView } from './ui';
+
+export const HomePage = withPageViewModel(HomePageVM)(HomePageView);

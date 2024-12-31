@@ -9,14 +9,6 @@ declare module '*.css' {
 }
 
 declare module '*.scss' {
-  // type ExportableSizes = {
-  //   screenXs: string;
-  //   screenS: string;
-  //   screenM: string;
-  //   screenL: string;
-  //   screenXl: string;
-  // };
-
   const map: Record<string, string>;
   export default map;
 }

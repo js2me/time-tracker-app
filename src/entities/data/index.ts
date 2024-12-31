@@ -1,4 +1,2 @@
-import * as dataModel from './model';
-
-export * from './types';
-export { dataModel };
+export * from './model';
+export * from './model.types';
