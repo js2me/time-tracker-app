@@ -1,12 +1,11 @@
 import { reaction } from 'mobx';
-import {
-  TwoColorThemeStoreConfig,
-  TwoColorThemeStoreImpl,
-} from 'mobx-shared-entities/theme';
+import { TwoColorThemeStore } from 'mobx-shared-entities/theme';
 
-export class ThemeStoreImpl extends TwoColorThemeStoreImpl {
-  constructor(config?: TwoColorThemeStoreConfig) {
-    super(config);
+export class ThemeStoreImpl extends TwoColorThemeStore {
+  constructor() {
+    super({
+      localStorageKey: 'theme',
+    });
 
     reaction(
       () => this.colorScheme,

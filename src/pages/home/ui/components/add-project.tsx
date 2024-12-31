@@ -1,8 +1,9 @@
 import { PlusIcon } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
+import { useViewModel } from 'mobx-vm-entities';
 import { useLayoutEffect, useRef } from 'react';
 import { useToggle } from 'react-shared-utils/hooks';
 
-import { dataModel } from '@/entities/data';
 import { Button } from '@/shared/ui/button';
 import {
   Dialog,
@@ -16,9 +17,11 @@ import {
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 
-import { toastModel } from '@/shared/_entities/toast';
+import { HomePageVM } from '../../model';
 
-export const AddProject = () => {
+export const AddProject = observer(() => {
+  const { data } = useViewModel<HomePageVM>();
+
   const [visible, , setVisible] = useToggle(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -51,17 +54,13 @@ export const AddProject = () => {
               new FormData(form),
             ) as AnyObject;
 
-            dataModel.createNewProject({
+            data.createNewProject({
               logs: [],
               rate: 0,
               name: formData.name,
             });
             form.reset();
             setVisible(false);
-            toastModel.create({
-              type: 'success',
-              message: 'Проект успешно сделан!',
-            });
           }}
         >
           <div className={'grid gap-4 py-4'}>
@@ -84,4 +83,4 @@ export const AddProject = () => {
       </DialogContent>
     </Dialog>
   );
-};
+});

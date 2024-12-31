@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { ViewModelProps } from 'mobx-vm-entities';
 
-
 import { HomePageVM } from '../model';
 
 import { ActiveLogCard } from './components/active-log-card';

@@ -8,6 +8,7 @@ import { defineConfig } from 'vite';
 import { default as checker } from 'vite-plugin-checker';
 import { default as eslint } from 'vite-plugin-eslint';
 import { createHtmlPlugin as html } from 'vite-plugin-html';
+import { VitePWA } from 'vite-plugin-pwa';
 import svgr from 'vite-plugin-svgr';
 
 import packageJson from './package.json';
@@ -26,6 +27,13 @@ const port = +process.env.PORT || 8081;
 
 const useProxyTargetApiUrl = isPreview || isDev;
 
+const buildEnvs = {
+  VERSION: packageJson.version,
+  DEV: !isProd,
+  BASE_URL: baseUrl,
+  PREVIEW: isPreview,
+} satisfies BuildEnvariables
+
 // https://vitejs.dev/config/
 export default defineConfig({
   appType: 'spa',
@@ -34,12 +42,7 @@ export default defineConfig({
   clearScreen: true,
   define: {
     buildEnvs: JSON.stringify(
-      Object.assign({
-        VERSION: packageJson.version,
-        DEV: !isProd,
-        BASE_URL: baseUrl,
-        PREVIEW: isPreview,
-      } satisfies BuildEnvariables),
+      Object.assign(buildEnvs),
     ),
   },
   server: {
@@ -113,6 +116,34 @@ export default defineConfig({
       additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
     }),
     svgr({}),
+    isProd && VitePWA({
+      manifest: {
+        "background_color": "#ffffff",
+        "theme_color": "#f3f3f3",
+        "description": "Трекаем время, работаем над фрилансом, зарабатываем деньги",
+        "display": "fullscreen",
+        "icons": [
+          {
+            "src": "favicon.png",
+            "sizes": "64x64",
+            "type": "image/png"
+          },
+          {
+            "src": "logo.png",
+            "sizes": "391x391",
+            "type": "image/png"
+          },
+          {
+            "src": "logo-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          }
+        ],
+        "name": "Фриланс Тайм Машина",
+        "short_name": "Фриланс Тайм Машина",
+        "start_url": "/"
+      }
+    }),
     isProd && eslint(),
     isProd &&
       checker({
@@ -120,6 +151,11 @@ export default defineConfig({
       }),
     html({
       minify: isProd,
+      inject: {
+        data: {
+          baseUrl: buildEnvs.BASE_URL || '/',
+        }
+      }
     }),
   ].filter(Boolean),
 });

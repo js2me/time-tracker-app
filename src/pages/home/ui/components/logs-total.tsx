@@ -1,13 +1,16 @@
-import { useUnit } from 'effector-react';
+import { observer } from 'mobx-react-lite';
+import { useViewModel } from 'mobx-vm-entities';
 
-import { dataModel } from '@/entities/data';
+import { HomePageVM } from '../../model';
 
-export const LogsTotal = () => {
-  const totalLabel = useUnit(dataModel.$logsLabels);
+export const LogsTotal = observer(() => {
+  const { data } = useViewModel<HomePageVM>();
 
-  if (!totalLabel) return null;
+  if (!data.logsLabels) return null;
 
   return (
-    <div className={'select-text p-1 text-sm font-semibold'}>{totalLabel}</div>
+    <div className={'select-text p-1 text-sm font-semibold'}>
+      {data.logsLabels}
+    </div>
   );
-};
+});

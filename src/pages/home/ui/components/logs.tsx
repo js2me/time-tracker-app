@@ -1,46 +1,12 @@
-import { useStoreMap } from 'effector-react';
+import { observer } from 'mobx-react-lite';
+import { useViewModel } from 'mobx-vm-entities';
 
-import { dataModel, ProjectLog } from '@/entities/data';
-import { hammer } from '@/shared/lib/common/hammer';
+import { HomePageVM } from '../../model';
 
 import { Log } from './log';
 
-interface LogGroup {
-  label: string;
-  logs: (ProjectLog & { index: number })[];
-}
-
-export const Logs = () => {
-  const groupedLogs = useStoreMap(
-    dataModel.activeProject.$value,
-    (project): LogGroup[] | null => {
-      if (!project) return null;
-
-      if (project.logs.length === 0) return [];
-
-      const records: Record<string, LogGroup> = {};
-
-      [...project.logs]
-        .map((log, index) => ({ ...log, index }))
-        .sort(
-          (a, b) =>
-            new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
-        )
-        .forEach((log) => {
-          const dateLabel = hammer.format.dateTime(log.startDate, {
-            format: 'month',
-          });
-
-          if (!records[dateLabel]) {
-            records[dateLabel] = { label: dateLabel, logs: [] };
-          }
-
-          records[dateLabel].logs.push(log);
-        });
-
-      return Object.values(records);
-    },
-  );
+export const Logs = observer(() => {
+  const { groupedLogs } = useViewModel<HomePageVM>();
 
   if (!groupedLogs) {
     return (
@@ -70,7 +36,13 @@ export const Logs = () => {
             </h1>
             <div className={'flex select-text flex-col'}>
               {group.logs.map((log, index) => {
-                return <Log key={index} log={log} index={log.index} />;
+                return (
+                  <Log
+                    key={`${index}_${log.index}  `}
+                    log={log}
+                    index={log.index}
+                  />
+                );
               })}
             </div>
           </div>
@@ -78,4 +50,4 @@ export const Logs = () => {
       })}
     </div>
   );
-};
+});

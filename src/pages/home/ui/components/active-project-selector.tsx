@@ -1,6 +1,6 @@
-import { useUnit } from 'effector-react/compat';
+import { observer } from 'mobx-react-lite';
+import { useViewModel } from 'mobx-vm-entities';
 
-import { dataModel } from '@/entities/data';
 import {
   Select,
   SelectContent,
@@ -9,19 +9,18 @@ import {
   SelectValue,
 } from '@/shared/ui/select';
 
-export const ActiveProjectSelector = () => {
-  const projects = useUnit(dataModel.projects);
-  const activeProject = useUnit(dataModel.activeProject);
+import { HomePageVM } from '../../model';
 
-  const setActiveProject = useUnit(dataModel.setActiveProject);
+export const ActiveProjectSelector = observer(() => {
+  const { data } = useViewModel<HomePageVM>();
 
   return (
     <Select
-      value={activeProject.value?.name}
-      disabled={projects.empty}
+      value={data.activeProject?.name}
+      disabled={data.projects.length === 0}
       onValueChange={(name) =>
-        setActiveProject(
-          projects.value.find((project) => project.name === name)!,
+        data.setActiveProject(
+          data.projects.find((project) => project.name === name)!,
         )
       }
     >
@@ -29,7 +28,7 @@ export const ActiveProjectSelector = () => {
         <SelectValue placeholder={'Выберите проект...'} />
       </SelectTrigger>
       <SelectContent>
-        {projects.value.map((project) => {
+        {data.projects.map((project) => {
           return (
             <SelectItem value={project.name || '-'} key={project.name}>
               {project.name || '-'}
@@ -39,4 +38,4 @@ export const ActiveProjectSelector = () => {
       </SelectContent>
     </Select>
   );
-};
+});

@@ -1,11 +1,9 @@
-import { useUnit } from 'effector-react';
 import { Moon, Sun, SunMoon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { ViewModelProps } from 'mobx-vm-entities';
 import { ReactNode } from 'react';
 import { cx } from 'yammies/css';
 
-import { dataModel } from '@/entities/data';
 import { logoImageUrl } from '@/shared/assets';
 import { useRootStore } from '@/shared/lib/mobx/root-store';
 import { Button } from '@/shared/ui/button';
@@ -21,8 +19,6 @@ interface LayoutViewProps extends ViewModelProps<LayoutVM> {
 export const LayoutView = observer(
   ({ children, customLogoClick, model }: LayoutViewProps) => {
     const { theme } = useRootStore();
-
-    const logoAnimating = useUnit(dataModel.$activeLogIsActive);
 
     const handleLogoClick = () => {
       if (customLogoClick) {
@@ -47,7 +43,7 @@ export const LayoutView = observer(
             alt={'Тайм трекер машина'}
             src={logoImageUrl}
             className={`h-14 rounded-sm text-reverse max-xs:h-10 ${
-              logoAnimating ? 'animate-pulse duration-1000' : ''
+              model.isLogoAnimating ? 'animate-pulse duration-1000' : ''
             }`}
           />
           <h1

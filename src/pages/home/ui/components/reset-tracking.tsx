@@ -1,10 +1,9 @@
-import { useStoreMap } from 'effector-react';
 import { EraserIcon } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
+import { useViewModel } from 'mobx-vm-entities';
 import { useLayoutEffect, useRef } from 'react';
+import { useToggle } from 'react-shared-utils/hooks';
 
-import { dataModel } from '@/entities/data';
-import { toastModel } from '@/shared/_entities/toast';
-import { useToggle } from '@/shared/lib/react/hooks/use-toggle';
 import { Button } from '@/shared/ui/button';
 import {
   Dialog,
@@ -16,10 +15,12 @@ import {
   DialogTrigger,
 } from '@/shared/ui/dialog';
 
-export const ResetTracking = () => {
+import { HomePageVM } from '../../model';
+
+export const ResetTracking = observer(() => {
+  const { data } = useViewModel<HomePageVM>();
   const [visible, , setVisible] = useToggle(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const disabled = useStoreMap(dataModel.$logsLabels, (labels) => !labels);
 
   useLayoutEffect(() => {
     if (!visible) {
@@ -29,12 +30,12 @@ export const ResetTracking = () => {
 
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
-      <DialogTrigger asChild disabled={disabled}>
+      <DialogTrigger asChild disabled={!data.hasLogsLabels}>
         <Button
           variant={'outline'}
           size={'icon'}
           className={'shrink-0'}
-          disabled={disabled}
+          disabled={!data.hasLogsLabels}
         >
           <EraserIcon className={'h-4 w-4'} />
         </Button>
@@ -54,16 +55,10 @@ export const ResetTracking = () => {
 
             const form = formRef.current!;
 
-            dataModel.activeProject.update({
-              logs: [],
-            });
+            data.resetLogsForActiveProject();
 
             form.reset();
             setVisible(false);
-            toastModel.create({
-              type: 'success',
-              message: 'Всё сброшено!',
-            });
           }}
         >
           <DialogFooter>
@@ -73,4 +68,4 @@ export const ResetTracking = () => {
       </DialogContent>
     </Dialog>
   );
-};
+});

@@ -20,3 +20,4 @@ jsconfig.json
 vite.config.ts
 tailwind.config.js
 src/shared/ui
+postcss.config.cjs
