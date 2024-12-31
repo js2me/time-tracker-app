@@ -14,15 +14,17 @@ import svgr from 'vite-plugin-svgr';
 import packageJson from './package.json';
 // @ts-ignore ts(6307) ignore
 
-dotenv.config();
-
 const isProd = process.env.NODE_ENV === 'production';
 const isDev = !isProd;
+const isPreview = process.env.MODE === 'preview';
+
+dotenv.config({
+  path: !isPreview && isProd ? '.env.production' : '.env'
+});
 
 const browserTargets = browserslist.loadConfig({ path: '.' });
 
 const baseUrl = process.env.PUBLIC_URL || '/';
-const isPreview = process.env.MODE === 'preview';
 const port = +process.env.PORT || 8081;
 
 const useProxyTargetApiUrl = isPreview || isDev;
