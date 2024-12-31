@@ -31,8 +31,10 @@ export class DataModel {
       abortSignal: this.abortSignal,
     });
 
-    this.storage.syncProperty(this, 'projects', { key: '$store_projects'});
-    this.storage.syncProperty(this, 'activeProject', { key: '$store_active-project' });
+    this.storage.syncProperty(this, 'projects', { key: '$store_projects' });
+    this.storage.syncProperty(this, 'activeProject', {
+      key: '$store_active-project',
+    });
     this.storage.syncProperty(this, 'activeLog', { key: '$store_active-log' });
 
     if (this.activeLog?.status === 'active') {
