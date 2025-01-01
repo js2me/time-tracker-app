@@ -12,7 +12,7 @@ export const App = observer(() => {
   return (
     <TooltipProvider>
       <ErrorBoundary>
-        <Router base={'/time-tracker-app'}>
+        <Router base={buildEnvs.BASE_URL}>
           <Switch>
             <Route path={'/'}>
               <Layout>

@@ -2,9 +2,10 @@ import { autorun, computed, reaction, runInAction } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
 import { formatDate } from 'yammies/date-time';
 
-import { DataModel, ProjectLog } from '@/entities/data';
 import { Layout } from '@/pages/_layout';
 import { rootStore } from '@/shared/store';
+
+import { DataModel, ProjectLog } from './data';
 
 interface LogGroup {
   label: string;

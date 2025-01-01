@@ -40,8 +40,14 @@ export class DataModel {
     if (this.activeLog?.status === 'active') {
       this.ticker.start();
     }
-    reaction(() => this.ticker.ticks, this.handleTick);
-    reaction(() => this.activeProject, this.handleActiveProjectChanged);
+    reaction(() => this.ticker.ticks, this.handleTick, {
+      signal: this.abortSignal,
+    });
+    reaction(
+      () => JSON.stringify(this.activeProject),
+      this.handleActiveProjectChanged,
+      { signal: this.abortSignal },
+    );
   }
 
   get hasActiveLog() {
@@ -139,12 +145,18 @@ export class DataModel {
       return;
     }
 
-    const projectByActiveLog = this.projects.find(
-      (project) => project.name === this.activeLog?.projectName,
-    );
+    let activeProject: Maybe<Project>;
 
-    if (projectByActiveLog) {
-      projectByActiveLog.logs.push({
+    if (this.activeProject) {
+      activeProject = this.activeProject;
+    } else {
+      activeProject = this.projects.find(
+        (project) => project.name === this.activeLog?.projectName,
+      );
+    }
+
+    if (activeProject) {
+      activeProject.logs.push({
         startDate: this.activeLog.startDate,
         spentTime: this.activeLog.spentTime,
         meta: this.activeLog.meta,
@@ -152,7 +164,7 @@ export class DataModel {
       this.rootStore.toasts.create({
         type: 'success',
         message: 'Хорошая работа!',
-        description: `Лог добавлен в проект "${projectByActiveLog.name}"`,
+        description: `Лог добавлен в проект "${activeProject.name}"`,
       });
     }
 
@@ -296,12 +308,12 @@ ${this.activeProject.logs
   };
 
   @action
-  private handleActiveProjectChanged = (projectUpdate: Maybe<Project>) => {
-    if (!projectUpdate) return;
+  private handleActiveProjectChanged = () => {
+    if (!this.activeProject) return;
 
     for (const project of this.projects) {
-      if (project.name === projectUpdate.name) {
-        Object.assign(project, projectUpdate);
+      if (project.name === this.activeProject.name) {
+        Object.assign(project, this.activeProject);
         return;
       }
     }

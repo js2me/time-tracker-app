@@ -155,7 +155,7 @@ export default defineConfig({
       minify: isProd,
       inject: {
         data: {
-          baseUrl: buildEnvs.BASE_URL || '/',
+          buildEnvs
         }
       }
     }),
