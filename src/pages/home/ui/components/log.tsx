@@ -13,9 +13,9 @@ import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 
 import { HomePageVM } from '../../model';
+import { ProjectLog } from '../../model/data';
 
 import { DeleteLog } from './delete-log';
-import { ProjectLog } from '../../model/data';
 
 function wrapLinks(text: string) {
   const linkRegex = /(https?:\/\/[-a-zA-Z0-9@:%._\\+~#?&//=]*)/g;
