@@ -8,7 +8,6 @@ import { formatDate, timeDuration } from 'yammies/date-time';
 import { sanitizeHtml } from 'yammies/html';
 import { ms } from 'yammies/ms';
 
-import { ProjectLog } from '@/entities/data';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
@@ -16,6 +15,7 @@ import { Textarea } from '@/shared/ui/textarea';
 import { HomePageVM } from '../../model';
 
 import { DeleteLog } from './delete-log';
+import { ProjectLog } from '../../model/data';
 
 function wrapLinks(text: string) {
   const linkRegex = /(https?:\/\/[-a-zA-Z0-9@:%._\\+~#?&//=]*)/g;
