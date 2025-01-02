@@ -1,11 +1,10 @@
-import { action, autorun, computed, reaction, runInAction } from 'mobx';
+import { action, autorun, computed } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
 import { formatDate } from 'yummies/date-time';
 import { sanitizeHtml } from 'yummies/html';
 import { ms } from 'yummies/ms';
 
 import { LogRaw, Project, ProjectLog } from '@/entities/time-tracker/model';
-import { Layout } from '@/pages/_layout';
 import { rootStore } from '@/store';
 
 interface LogGroup {
@@ -267,19 +266,6 @@ ${this.timeTracker.activeProject.logs
         }
       },
       {
-        signal: this.unmountSignal,
-      },
-    );
-
-    reaction(
-      () => this.timeTracker.isActiveLogActive,
-      (isActiveLogActive) => {
-        runInAction(() => {
-          this.viewModels.get(Layout)!.isLogoAnimating = isActiveLogActive;
-        });
-      },
-      {
-        fireImmediately: true,
         signal: this.unmountSignal,
       },
     );

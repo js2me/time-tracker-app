@@ -4,6 +4,7 @@ import { ErrorBoundary } from 'react-simple-error-boundary';
 import { Route, Router, Switch } from 'wouter';
 
 import { Layout } from '@/pages/_layout';
+import { AboutPage } from '@/pages/about';
 import { HomePage } from '@/pages/home';
 import { NotFoundPage } from '@/pages/not-found';
 import { useRootStore } from '@/shared/lib/mobx/root-store';
@@ -22,6 +23,11 @@ export const App = observer(() => {
               <Route path={'/'}>
                 <Layout>
                   <HomePage />
+                </Layout>
+              </Route>
+              <Route path={'/about'}>
+                <Layout>
+                  <AboutPage />
                 </Layout>
               </Route>
               <Route path={'*'}>

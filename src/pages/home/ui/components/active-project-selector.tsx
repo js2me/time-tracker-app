@@ -17,7 +17,7 @@ export const ActiveProjectSelector = observer(() => {
   return (
     <Select
       value={model.timeTracker.activeProject?.name}
-      disabled={model.timeTracker.hasProjects}
+      disabled={!model.timeTracker.hasProjects}
       onValueChange={model.setActiveProject}
     >
       <SelectTrigger className={'max-w-[250px]'}>

@@ -2,6 +2,7 @@ import { Moon, Sun, SunMoon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { ViewModelProps } from 'mobx-vm-entities';
 import { ReactNode } from 'react';
+import { Link } from 'wouter';
 import { cx } from 'yummies/css';
 
 import { logoImageUrl } from '@/shared/assets';
@@ -42,16 +43,27 @@ export const LayoutView = observer(
           <img
             alt={'Тайм трекер машина'}
             src={logoImageUrl}
-            className={`h-14 rounded-sm text-reverse max-xs:h-10 ${
+            onClick={handleLogoClick}
+            className={`h-14 rounded-sm text-reverse max-xs:h-10 cursor-pointer ${
               model.isLogoAnimating ? 'animate-pulse duration-1000' : ''
             }`}
           />
-          <h1
-            className={'cursor-pointer text-3xl font-extrabold tracking-tight'}
-            onClick={handleLogoClick}
-          >
-            Тайм Трекер Машина
-          </h1>
+          <div className={'relative'}>
+            <h1
+              className={
+                'cursor-pointer text-3xl font-extrabold tracking-tight'
+              }
+              onClick={handleLogoClick}
+            >
+              Тайм Трекер Машина
+            </h1>
+            <Link
+              to={'/about'}
+              className={'text-xs absolute -bottom-5 left-0 text-link'}
+            >
+              О проекте
+            </Link>
+          </div>
           <Button
             variant={'ghost'}
             size={'icon'}
