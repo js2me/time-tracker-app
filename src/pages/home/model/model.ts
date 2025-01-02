@@ -19,6 +19,35 @@ export class HomePageVM extends PageViewModelImpl {
     return true;
   }
 
+  @computed
+  get groupedLogs(): LogGroup[] | null {
+    if (!this.data.activeProject) return null;
+
+    if (this.data.activeProject.logs.length === 0) return [];
+
+    const records: Record<string, LogGroup> = {};
+
+    [...this.data.activeProject.logs]
+      .map((log, index) => ({ ...log, index }))
+      .sort(
+        (a, b) =>
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
+      )
+      .forEach((log) => {
+        const dateLabel = formatDate(log.startDate, {
+          format: 'month',
+        });
+
+        if (!records[dateLabel]) {
+          records[dateLabel] = { label: dateLabel, logs: [] };
+        }
+
+        records[dateLabel].logs.push(log);
+      });
+
+    return Object.values(records);
+  }
+
   mount(): void {
     super.mount();
 
@@ -55,36 +84,8 @@ export class HomePageVM extends PageViewModelImpl {
       },
       {
         fireImmediately: true,
+        signal: this.unmountSignal,
       },
     );
-  }
-
-  @computed
-  get groupedLogs(): LogGroup[] | null {
-    if (!this.data.activeProject) return null;
-
-    if (this.data.activeProject.logs.length === 0) return [];
-
-    const records: Record<string, LogGroup> = {};
-
-    [...this.data.activeProject.logs]
-      .map((log, index) => ({ ...log, index }))
-      .sort(
-        (a, b) =>
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
-      )
-      .forEach((log) => {
-        const dateLabel = formatDate(log.startDate, {
-          format: 'month',
-        });
-
-        if (!records[dateLabel]) {
-          records[dateLabel] = { label: dateLabel, logs: [] };
-        }
-
-        records[dateLabel].logs.push(log);
-      });
-
-    return Object.values(records);
   }
 }
