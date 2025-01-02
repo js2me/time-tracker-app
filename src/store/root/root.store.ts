@@ -1,9 +1,9 @@
 import { TwoColorThemeStore } from 'mobx-shared-entities/theme';
 import { ViewModelStore } from 'mobx-vm-entities';
-import { IMobxRouter } from 'mobx-wouter';
 
 import { TimeTrackerModel } from '@/entities/time-tracker/model';
 import { ToastStore } from '@/shared/_entities/toast';
+import { MobxRouter } from '@/shared/lib/mobx/router';
 
 /**
  * Рут стор приложения
@@ -12,7 +12,7 @@ export interface AppRootStore {
   /**
    * Роутер приложения
    */
-  router: IMobxRouter;
+  router: MobxRouter;
   /**
    * Тема приложения
    */

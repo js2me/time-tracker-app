@@ -9,13 +9,16 @@ import { TooltipProvider } from '@/shared/ui/tooltip';
 import { Routing } from './routing';
 
 export const App = observer(() => {
-  const { viewModels } = useRootStore();
+  const { viewModels, router } = useRootStore();
 
   return (
     <ViewModelsProvider value={viewModels}>
       <TooltipProvider>
         <ErrorBoundary>
-          <Routing />
+          <Routing
+            useHashRouting={router.routerType === 'hash'}
+            baseUrl={router.baseUrl}
+          />
         </ErrorBoundary>
         <Toaster position={'bottom-center'} />
       </TooltipProvider>

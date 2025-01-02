@@ -6,9 +6,15 @@ import { AboutPage } from '@/pages/about';
 import { HomePage } from '@/pages/home';
 import { NotFoundPage } from '@/pages/not-found';
 
-export const Routing = () => (
-  <Router base={buildEnvs.BASE_URL}>
-    <Router hook={useHashLocation}>
+export const Routing = ({
+  useHashRouting,
+  baseUrl,
+}: {
+  useHashRouting?: boolean;
+  baseUrl?: string;
+}) => (
+  <Router base={baseUrl}>
+    <Router hook={useHashRouting ? useHashLocation : undefined}>
       <Switch>
         <Route path={'/'}>
           <Layout>
