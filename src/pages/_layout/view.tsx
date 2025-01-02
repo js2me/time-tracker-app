@@ -58,7 +58,7 @@ export const LayoutView = observer(
               Тайм Трекер Машина
             </h1>
             <Link
-              href={'/#/about'}
+              href={'/about'}
               className={'text-xs absolute -bottom-5 left-0 text-link'}
             >
               О проекте
