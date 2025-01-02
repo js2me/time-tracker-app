@@ -8,6 +8,6 @@ export class LayoutVM extends ViewModelImpl {
   }
 
   handleClickLogo = () => {
-    rootStore.router.navigate('/');
+    rootStore.router.navigate('/#/');
   };
 }
