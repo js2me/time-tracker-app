@@ -15,7 +15,7 @@ export const ActiveLogTime = observer(
     rightContent?: ReactNode;
     leftContent?: ReactNode;
   }) => {
-    const { data } = useViewModel<HomePageVM>();
+    const { timeTracker: data } = useViewModel<HomePageVM>();
 
     return (
       <span {...props}>

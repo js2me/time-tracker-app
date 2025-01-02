@@ -12,7 +12,7 @@ import {
 import { HomePageVM } from '../../model';
 
 export const ActiveProjectSelector = observer(() => {
-  const { data } = useViewModel<HomePageVM>();
+  const { timeTracker: data } = useViewModel<HomePageVM>();
 
   return (
     <Select

@@ -4,7 +4,7 @@ import { useViewModel } from 'mobx-vm-entities';
 import { HomePageVM } from '../../model';
 
 export const LogsTotal = observer(() => {
-  const { data } = useViewModel<HomePageVM>();
+  const { timeTracker: data } = useViewModel<HomePageVM>();
 
   if (!data.logsLabels) return null;
 

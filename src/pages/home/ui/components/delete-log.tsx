@@ -19,7 +19,7 @@ import { HomePageVM } from '../../model';
 
 export const DeleteLog = observer(
   ({ index, onDelete }: { index: number; onDelete: VoidFunction }) => {
-    const { data } = useViewModel<HomePageVM>();
+    const { timeTracker: data } = useViewModel<HomePageVM>();
 
     const [visible, , setVisible] = useToggle(false);
     const formRef = useRef<HTMLFormElement>(null);

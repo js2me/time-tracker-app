@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { HomePageVM } from '../../model';
 
 export const CopyData = observer(() => {
-  const { data } = useViewModel<HomePageVM>();
+  const { timeTracker: data } = useViewModel<HomePageVM>();
 
   return (
     <Button

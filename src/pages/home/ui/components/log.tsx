@@ -31,7 +31,7 @@ const prepareMeta = (meta: string) => {
 
 export const Log = observer(
   ({ log, index }: { log: ProjectLog; index: number }) => {
-    const { data } = useViewModel<HomePageVM>();
+    const { timeTracker: data } = useViewModel<HomePageVM>();
 
     const [editMode, toggleEditMode, setEditMode] = useToggle(false);
     const [meta, setMeta] = useState(log.meta);

@@ -1,6 +1,6 @@
 import { PageViewModelImpl } from 'mobx-wouter';
 
-import { rootStore } from '@/shared/store';
+import { rootStore } from '@/store';
 
 export class NotFoundPageVM extends PageViewModelImpl {
   mount(): void {

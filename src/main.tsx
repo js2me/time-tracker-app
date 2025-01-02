@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { rootElement } from '@/shared/config/dom';
 
 import { App } from '@/app';
-import { rootStore } from './shared/store';
+import { rootStore } from './store';
 import { RootStoreProvider } from './shared/lib/mobx/root-store';
 
 createRoot(rootElement).render(

@@ -6,7 +6,7 @@ import { Input } from '@/shared/ui/input';
 import { HomePageVM } from '../../model';
 
 export const RateInput = observer(() => {
-  const { data } = useViewModel<HomePageVM>();
+  const { timeTracker: data } = useViewModel<HomePageVM>();
   if (!data.activeProject) return null;
 
   return (
