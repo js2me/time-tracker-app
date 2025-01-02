@@ -8,19 +8,15 @@ import { NotFoundPage } from '@/pages/not-found';
 export const Routing = () => (
   <Router base={buildEnvs.BASE_URL}>
     <Switch>
-      <Route path={'/'} nest>
-        <Router>
-          <Layout>
-            <Switch>
-              <Route path={'about'}>
-                <AboutPage />
-              </Route>
-              <Route path={'*'}>
-                <HomePage />
-              </Route>
-            </Switch>
-          </Layout>
-        </Router>
+      <Route path={'/'}>
+        <Layout>
+          <HomePage />
+        </Layout>
+      </Route>
+      <Route path={'/about'}>
+        <Layout>
+          <AboutPage />
+        </Layout>
       </Route>
       <Route path={'*'}>
         <NotFoundPage />
