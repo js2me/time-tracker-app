@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import { useViewModel } from 'mobx-vm-entities';
 import { useLayoutEffect, useRef } from 'react';
 import { useToggle } from 'react-shared-utils/hooks';
-import { cx } from 'yammies/css';
-import { ms } from 'yammies/ms';
+import { cx } from 'yummies/css';
+import { ms } from 'yummies/ms';
 
 import { Button } from '@/shared/ui/button';
 import {
@@ -23,7 +23,7 @@ import { HomePageVM } from '../../model';
 
 export const ManualAddLog = observer(
   ({ className }: { className?: string }) => {
-    const { timeTracker: data } = useViewModel<HomePageVM>();
+    const model = useViewModel<HomePageVM>();
     const [visible, , setVisible] = useToggle(false);
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -66,7 +66,7 @@ export const ManualAddLog = observer(
 
               const startDate = new Date(formData.date).toISOString();
 
-              data.addLogToActiveProject({
+              model.addLogToActiveProject({
                 startDate,
                 spentTime,
                 meta: formData.description || '',

@@ -18,7 +18,7 @@ import {
 import { HomePageVM } from '../../model';
 
 export const ResetTracking = observer(() => {
-  const { timeTracker: data } = useViewModel<HomePageVM>();
+  const model = useViewModel<HomePageVM>();
   const [visible, , setVisible] = useToggle(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -30,12 +30,12 @@ export const ResetTracking = observer(() => {
 
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
-      <DialogTrigger asChild disabled={!data.hasLogsLabels}>
+      <DialogTrigger asChild disabled={!model.timeTracker.hasLogsLabels}>
         <Button
           variant={'outline'}
           size={'icon'}
           className={'shrink-0'}
-          disabled={!data.hasLogsLabels}
+          disabled={!model.timeTracker.hasLogsLabels}
         >
           <EraserIcon className={'h-4 w-4'} />
         </Button>
@@ -55,7 +55,7 @@ export const ResetTracking = observer(() => {
 
             const form = formRef.current!;
 
-            data.resetLogsForActiveProject();
+            model.resetLogsForActiveProject();
 
             form.reset();
             setVisible(false);

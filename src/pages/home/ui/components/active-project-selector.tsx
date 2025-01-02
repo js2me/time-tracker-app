@@ -12,23 +12,19 @@ import {
 import { HomePageVM } from '../../model';
 
 export const ActiveProjectSelector = observer(() => {
-  const { timeTracker: data } = useViewModel<HomePageVM>();
+  const model = useViewModel<HomePageVM>();
 
   return (
     <Select
-      value={data.activeProject?.name}
-      disabled={data.projects.length === 0}
-      onValueChange={(name) =>
-        data.setActiveProject(
-          data.projects.find((project) => project.name === name)!,
-        )
-      }
+      value={model.timeTracker.activeProject?.name}
+      disabled={model.timeTracker.hasProjects}
+      onValueChange={model.setActiveProject}
     >
       <SelectTrigger className={'max-w-[250px]'}>
         <SelectValue placeholder={'Выберите проект...'} />
       </SelectTrigger>
       <SelectContent>
-        {data.projects.map((project) => {
+        {model.timeTracker.projects.map((project) => {
           return (
             <SelectItem value={project.name || '-'} key={project.name}>
               {project.name || '-'}

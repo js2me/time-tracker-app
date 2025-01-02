@@ -1,8 +1,8 @@
 import { action, autorun, computed, reaction, runInAction } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
-import { formatDate } from 'yammies/date-time';
-import { sanitizeHtml } from 'yammies/html';
-import { ms } from 'yammies/ms';
+import { formatDate } from 'yummies/date-time';
+import { sanitizeHtml } from 'yummies/html';
+import { ms } from 'yummies/ms';
 
 import { LogRaw, Project, ProjectLog } from '@/entities/time-tracker/model';
 import { Layout } from '@/pages/_layout';
@@ -49,8 +49,13 @@ export class HomePageVM extends PageViewModelImpl {
     return Object.values(records);
   }
   @action.bound
-  setActiveProject(project: Project) {
-    this.timeTracker.activeProject = project;
+  setActiveProject(projectName: Project['name']) {
+    const nextActiveProject = this.timeTracker.projects.find(
+      (project) => project.name === projectName,
+    )!;
+    if (nextActiveProject) {
+      this.timeTracker.activeProject = nextActiveProject;
+    }
   }
 
   @action.bound
@@ -132,7 +137,13 @@ export class HomePageVM extends PageViewModelImpl {
   }
 
   @action.bound
-  createNewProject(project: Project) {
+  createNewProject(enteredName: string) {
+    const project: Project = {
+      logs: [],
+      rate: 0,
+      name: enteredName,
+    };
+
     this.timeTracker.projects.push({ ...project });
     this.timeTracker.activeProject = { ...project };
 

@@ -1,7 +1,7 @@
 import { action, computed, observable, reaction } from 'mobx';
 import { Ticker } from 'mobx-shared-entities/ticker';
-import { timeDuration } from 'yammies/date-time';
-import { ms } from 'yammies/ms';
+import { timeDuration } from 'yummies/date-time';
+import { ms } from 'yummies/ms';
 
 import { StorageModel } from '@/shared/lib/mobx/storage';
 
@@ -44,6 +44,10 @@ export class TimeTrackerModel {
       this.handleActiveProjectChanged,
       { signal: this.config.abortSignal },
     );
+  }
+
+  get hasProjects() {
+    return this.projects.length > 0;
   }
 
   get hasActiveLog() {

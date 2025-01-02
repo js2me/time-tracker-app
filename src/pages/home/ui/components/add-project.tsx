@@ -20,7 +20,7 @@ import { Label } from '@/shared/ui/label';
 import { HomePageVM } from '../../model';
 
 export const AddProject = observer(() => {
-  const { timeTracker: data } = useViewModel<HomePageVM>();
+  const model = useViewModel<HomePageVM>();
 
   const [visible, , setVisible] = useToggle(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -54,11 +54,7 @@ export const AddProject = observer(() => {
               new FormData(form),
             ) as AnyObject;
 
-            data.createNewProject({
-              logs: [],
-              rate: 0,
-              name: formData.name,
-            });
+            model.createNewProject(formData.name);
             form.reset();
             setVisible(false);
           }}

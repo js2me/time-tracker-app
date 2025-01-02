@@ -6,17 +6,20 @@ import { Input } from '@/shared/ui/input';
 import { HomePageVM } from '../../model';
 
 export const RateInput = observer(() => {
-  const { timeTracker: data } = useViewModel<HomePageVM>();
-  if (!data.activeProject) return null;
+  const model = useViewModel<HomePageVM>();
+
+  if (!model.timeTracker.activeProject) {
+    return null;
+  }
 
   return (
     <Input
       type={'number'}
       placeholder={'0'}
       className={'max-w-[140px]'}
-      value={data.activeProject.rate || ''}
+      value={model.timeTracker.activeProject.rate || ''}
       onChange={(e) => {
-        data.setRateForActiveProject(+e.target.value || 0);
+        model.setRateForActiveProject(+e.target.value || 0);
       }}
     />
   );

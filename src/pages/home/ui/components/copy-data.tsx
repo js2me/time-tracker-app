@@ -7,15 +7,15 @@ import { Button } from '@/shared/ui/button';
 import { HomePageVM } from '../../model';
 
 export const CopyData = observer(() => {
-  const { timeTracker: data } = useViewModel<HomePageVM>();
+  const model = useViewModel<HomePageVM>();
 
   return (
     <Button
       variant={'outline'}
       size={'icon'}
       className={'shrink-0'}
-      disabled={!data.hasLogsLabels}
-      onClick={data.copyDataToClipboard}
+      disabled={!model.timeTracker.hasLogsLabels}
+      onClick={model.copyDataToClipboard}
     >
       <CopyIcon className={'h-4 w-4'} />
     </Button>

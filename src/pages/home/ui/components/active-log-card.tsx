@@ -3,7 +3,7 @@ import { clamp } from 'lodash-es';
 import { observer } from 'mobx-react-lite';
 import { useViewModel } from 'mobx-vm-entities';
 import { useEffect, useRef } from 'react';
-import { ms } from 'yammies/ms';
+import { ms } from 'yummies/ms';
 
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
@@ -37,16 +37,21 @@ export const ActiveLogCard = observer(
         )}
       >
         <h1 className={`inline-flex w-full flex-1 text-xl font-semibold`}>
-          Трекер{model.timeTracker.activeLog ? ` (${model.timeTracker.activeLog.projectName})` : ''}
+          Трекер
+          {model.timeTracker.activeLog
+            ? ` (${model.timeTracker.activeLog.projectName})`
+            : ''}
         </h1>
         <Textarea
           ref={textareaRef}
           onChange={(e) => {
-            model.timeTracker.udpateActiveLog({ meta: e.target.value });
+            model.udpateActiveLog({ meta: e.target.value });
           }}
           className={'!h-[40px] bg-card'}
           placeholder={
-            model.timeTracker.activeLog ? 'Чем занимаешься?' : 'Чем будешь заниматься?'
+            model.timeTracker.activeLog
+              ? 'Чем занимаешься?'
+              : 'Чем будешь заниматься?'
           }
         />
         <div className={'mt-4 flex w-full flex-row items-center gap-2'}>
@@ -56,15 +61,20 @@ export const ActiveLogCard = observer(
                 className={cx(
                   `relative mr-auto flex items-center text-2xl font-bold`,
                   {
-                    'text-reverse': model.timeTracker.activeLog.status === 'paused',
-                    'text-destructive': model.timeTracker.activeLog.status !== 'paused',
+                    'text-reverse':
+                      model.timeTracker.activeLog.status === 'paused',
+                    'text-destructive':
+                      model.timeTracker.activeLog.status !== 'paused',
                   },
                 )}
                 title={'Сохранение лога начинается от 1 минуты'}
                 style={{
                   opacity: Math.max(
-                    clamp(model.timeTracker.activeLog.spentTime, 0, ms(1, 'min')) /
+                    clamp(
+                      model.timeTracker.activeLog.spentTime,
+                      0,
                       ms(1, 'min'),
+                    ) / ms(1, 'min'),
                     0.5,
                   ),
                 }}
@@ -89,7 +99,7 @@ export const ActiveLogCard = observer(
                 variant={'destructive'}
                 disabled={model.timeTracker.activeLog.status === 'active'}
                 onClick={() => {
-                  model.timeTracker.finishActiveLog();
+                  model.finishActiveLog();
                   if (textareaRef.current) {
                     textareaRef.current.value = '';
                   }
@@ -101,7 +111,7 @@ export const ActiveLogCard = observer(
                 <Button
                   style={{ width: 150 }}
                   variant={'positive'}
-                  onClick={model.timeTracker.continueActiveLog}
+                  onClick={model.continueActiveLog}
                 >
                   ПРОДОЛЖИТЬ
                 </Button>
@@ -110,7 +120,7 @@ export const ActiveLogCard = observer(
                   style={{ width: 150 }}
                   variant={'outline'}
                   className={'bg-card'}
-                  onClick={model.timeTracker.pauseActiveLog}
+                  onClick={model.pauseActiveLog}
                 >
                   ПАУЗА
                 </Button>
@@ -122,7 +132,7 @@ export const ActiveLogCard = observer(
               className={'ml-auto'}
               variant={'positive'}
               onClick={() => {
-                model.timeTracker.createActiveLog({
+                model.createActiveLog({
                   meta: textareaRef.current?.value ?? '',
                   lastTickDate: null,
                   startDate: new Date().toISOString(),

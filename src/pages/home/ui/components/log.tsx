@@ -4,16 +4,16 @@ import { observer } from 'mobx-react-lite';
 import { useViewModel } from 'mobx-vm-entities';
 import { useLayoutEffect, useState } from 'react';
 import { useToggle } from 'react-shared-utils/hooks';
-import { formatDate, timeDuration } from 'yammies/date-time';
-import { sanitizeHtml } from 'yammies/html';
-import { ms } from 'yammies/ms';
+import { formatDate, timeDuration } from 'yummies/date-time';
+import { sanitizeHtml } from 'yummies/html';
+import { ms } from 'yummies/ms';
 
+import { ProjectLog } from '@/entities/time-tracker/model';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 
 import { HomePageVM } from '../../model';
-import { ProjectLog } from '../../model/data';
 
 import { DeleteLog } from './delete-log';
 
@@ -31,7 +31,7 @@ const prepareMeta = (meta: string) => {
 
 export const Log = observer(
   ({ log, index }: { log: ProjectLog; index: number }) => {
-    const { timeTracker: data } = useViewModel<HomePageVM>();
+    const model = useViewModel<HomePageVM>();
 
     const [editMode, toggleEditMode, setEditMode] = useToggle(false);
     const [meta, setMeta] = useState(log.meta);
@@ -130,7 +130,7 @@ export const Log = observer(
                 variant={'positive'}
                 className={'mb-4 h-5 w-5'}
                 onClick={() => {
-                  data.setLog({
+                  model.setLog({
                     ...log,
                     meta,
                     index,

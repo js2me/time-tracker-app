@@ -2,7 +2,7 @@ import { Moon, Sun, SunMoon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { ViewModelProps } from 'mobx-vm-entities';
 import { ReactNode } from 'react';
-import { cx } from 'yammies/css';
+import { cx } from 'yummies/css';
 
 import { logoImageUrl } from '@/shared/assets';
 import { useRootStore } from '@/shared/lib/mobx/root-store';
