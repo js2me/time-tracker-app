@@ -16,7 +16,7 @@ export const App = observer(() => {
       <TooltipProvider>
         <ErrorBoundary>
           <Routing
-            useHashRouting={router.routerType === 'hash'}
+            useHashRouting={router.type === 'hash'}
             baseUrl={router.baseUrl}
           />
         </ErrorBoundary>

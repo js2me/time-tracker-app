@@ -21,7 +21,7 @@ export class RootStoreImpl implements RootStore {
     this.theme = new ThemeStoreImpl();
     this.toasts = new ToastStore();
     this.viewModels = new ViewModelStoreImpl();
-    this.router = new MobxRouter({});
+    this.router = new MobxRouter();
     this.entities = {
       timeTracker: new TimeTrackerModel({
         rootStore: this,
