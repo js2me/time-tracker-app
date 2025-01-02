@@ -7,21 +7,23 @@ import { HomePage } from '@/pages/home';
 import { NotFoundPage } from '@/pages/not-found';
 
 export const Routing = () => (
-  <Router base={buildEnvs.BASE_URL} hook={useHashLocation}>
-    <Switch>
-      <Route path={'/'}>
-        <Layout>
-          <HomePage />
-        </Layout>
-      </Route>
-      <Route path={'/about'}>
-        <Layout>
-          <AboutPage />
-        </Layout>
-      </Route>
-      <Route path={'*'}>
-        <NotFoundPage />
-      </Route>
-    </Switch>
+  <Router base={buildEnvs.BASE_URL}>
+    <Router hook={useHashLocation}>
+      <Switch>
+        <Route path={'/'}>
+          <Layout>
+            <HomePage />
+          </Layout>
+        </Route>
+        <Route path={'/about'}>
+          <Layout>
+            <AboutPage />
+          </Layout>
+        </Route>
+        <Route path={'*'}>
+          <NotFoundPage />
+        </Route>
+      </Switch>
+    </Router>
   </Router>
 );
