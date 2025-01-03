@@ -1,6 +1,6 @@
 <img src="public/logo.png" align="right" height="256" alt="logo" />
 
-# time-trackerapp  
+# time-tracker-app  
 
 
 _Тайм-трекер для работы_  
