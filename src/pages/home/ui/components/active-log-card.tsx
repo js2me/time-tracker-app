@@ -69,7 +69,7 @@ export const ActiveLogCard = observer(
                 title={'Сохранение лога начинается от 1 минуты'}
                 style={{
                   opacity: Math.max(
-                    model.timeTracker.activeLogMinTimeLimit / ms(1, 'min'),
+                    model.timeTracker.activeLogTimeWithMinLimit / ms(1, 'min'),
                     0.5,
                   ),
                 }}

@@ -47,6 +47,7 @@ export class TimeTrackerModel {
     );
   }
 
+  @computed
   get hasProjects() {
     return this.projects.length > 0;
   }
@@ -72,7 +73,7 @@ export class TimeTrackerModel {
   }
 
   @computed
-  get activeLogMinTimeLimit() {
+  get activeLogTimeWithMinLimit() {
     return clamp(this.activeLogTime, 0, ms(1, 'min'));
   }
 
