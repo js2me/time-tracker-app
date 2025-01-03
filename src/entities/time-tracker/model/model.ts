@@ -72,12 +72,13 @@ export class TimeTrackerModel {
     return this.activeLog?.spentTime ?? 0;
   }
 
-  @computed
-  get activeLogTimeWithMinLimit() {
-    return clamp(this.activeLogTime, 0, ms(1, 'min'));
-  }
+  logMinTime = ms(1, 'min');
 
   @computed
+  get activeLogTimeWithMinLimit() {
+    return clamp(this.activeLogTime, 0, this.logMinTime);
+  }
+
   get logsLabels() {
     if (!this.activeProject) return '';
 

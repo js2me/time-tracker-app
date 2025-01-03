@@ -2,7 +2,6 @@ import { action, autorun, computed } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
 import { formatDate } from 'yummies/date-time';
 import { sanitizeHtml } from 'yummies/html';
-import { ms } from 'yummies/ms';
 
 import { LogRaw, Project, ProjectLog } from '@/entities/time-tracker/model';
 import { rootStore } from '@/store';
@@ -79,7 +78,7 @@ export class HomePageVM extends PageViewModelImpl {
       return;
     }
 
-    if (this.timeTracker.activeLog.spentTime <= ms(1, 'min')) {
+    if (this.timeTracker.activeLog.spentTime <= this.timeTracker.logMinTime) {
       rootStore.toasts.create({
         type: 'error',
         message: 'Слишком мало времени на один лог.',
