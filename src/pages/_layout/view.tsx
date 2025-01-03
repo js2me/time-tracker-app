@@ -44,7 +44,7 @@ export const LayoutView = observer(
             alt={'Тайм трекер машина'}
             src={logoImageUrl}
             onClick={handleLogoClick}
-            className={`h-14 rounded-sm text-reverse max-xs:h-10 cursor-pointer ${
+            className={`size-16 rounded-sm text-reverse max-xs:size-10 cursor-pointer ${
               model.isLogoAnimating ? 'animate-pulse duration-1000' : ''
             }`}
           />
@@ -59,7 +59,7 @@ export const LayoutView = observer(
             </h1>
             <Link
               href={'/about'}
-              className={'text-xs absolute -bottom-5 left-0 text-link'}
+              className={'text-xs absolute -bottom-3.5 left-0 text-link'}
             >
               О проекте
             </Link>
