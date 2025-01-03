@@ -1,0 +1,1 @@
+System.register(["./bundle-legacy.DaNj_9LM.js"],(function(e,t){"use strict";var s;return{setters:[e=>{s=e.P}],execute:function(){e("AboutPageVM",class extends s{mount(){super.mount(),document.title="О проекте"}})}}}));

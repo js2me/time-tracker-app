@@ -1,1 +1,0 @@
-System.register(["./bundle-legacy.lCJSax6W.js"],(function(e,t){"use strict";var s;return{setters:[e=>{s=e.P}],execute:function(){e("AboutPageVM",class extends s{mount(){super.mount(),document.title="О проекте"}})}}}));
