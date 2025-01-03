@@ -1,5 +1,4 @@
 import { cx } from 'class-variance-authority';
-import { clamp } from 'lodash-es';
 import { observer } from 'mobx-react-lite';
 import { useViewModel } from 'mobx-vm-entities';
 import { useEffect, useRef } from 'react';
@@ -27,7 +26,7 @@ export const ActiveLogCard = observer(
         textareaRef.current.value = model.timeTracker.activeLog.meta;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [!!model.timeTracker.activeLog]);
+    }, [model.timeTracker.hasActiveLog]);
 
     return (
       <Card
@@ -70,11 +69,7 @@ export const ActiveLogCard = observer(
                 title={'Сохранение лога начинается от 1 минуты'}
                 style={{
                   opacity: Math.max(
-                    clamp(
-                      model.timeTracker.activeLog.spentTime,
-                      0,
-                      ms(1, 'min'),
-                    ) / ms(1, 'min'),
+                    model.timeTracker.activeLogMinTimeLimit / ms(1, 'min'),
                     0.5,
                   ),
                 }}

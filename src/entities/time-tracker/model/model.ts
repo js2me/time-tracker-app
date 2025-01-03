@@ -1,3 +1,4 @@
+import { clamp } from 'lodash-es';
 import { action, computed, observable, reaction } from 'mobx';
 import { Ticker } from 'mobx-shared-entities/ticker';
 import { timeDuration } from 'yummies/date-time';
@@ -68,6 +69,11 @@ export class TimeTrackerModel {
 
   get activeLogTime() {
     return this.activeLog?.spentTime ?? 0;
+  }
+
+  @computed
+  get activeLogMinTimeLimit() {
+    return clamp(this.activeLogTime, 0, ms(1, 'min'));
   }
 
   @computed
