@@ -9,9 +9,9 @@ import { sanitizeHtml } from 'yummies/html';
 import { ms } from 'yummies/ms';
 
 import { ProjectLog } from '@/entities/time-tracker/model';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { Textarea } from '@/shared/ui/textarea';
+import { Button } from '@/shared/ui/generated/button';
+import { Input } from '@/shared/ui/generated/input';
+import { Textarea } from '@/shared/ui/generated/textarea';
 
 import { HomePageVM } from '../../model';
 

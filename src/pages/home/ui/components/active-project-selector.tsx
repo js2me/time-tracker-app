@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/shared/ui/select';
+} from '@/shared/ui/generated/select';
 
 import { HomePageVM } from '../../model';
 

@@ -6,7 +6,7 @@ import { useToggle } from 'react-shared-utils/hooks';
 import { cx } from 'yummies/css';
 import { ms } from 'yummies/ms';
 
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/generated/button';
 import {
   Dialog,
   DialogContent,
@@ -14,10 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/ui/dialog';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
-import { Textarea } from '@/shared/ui/textarea';
+} from '@/shared/ui/generated/dialog';
+import { Input } from '@/shared/ui/generated/input';
+import { Label } from '@/shared/ui/generated/label';
+import { Textarea } from '@/shared/ui/generated/textarea';
 
 import { HomePageVM } from '../../model';
 

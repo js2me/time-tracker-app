@@ -2,7 +2,7 @@ import { CopyIcon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { useViewModel } from 'mobx-vm-entities';
 
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/generated/button';
 
 import { HomePageVM } from '../../model';
 

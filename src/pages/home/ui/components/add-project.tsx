@@ -4,7 +4,7 @@ import { useViewModel } from 'mobx-vm-entities';
 import { useLayoutEffect, useRef } from 'react';
 import { useToggle } from 'react-shared-utils/hooks';
 
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/generated/button';
 import {
   Dialog,
   DialogContent,
@@ -13,9 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/ui/dialog';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
+} from '@/shared/ui/generated/dialog';
+import { Input } from '@/shared/ui/generated/input';
+import { Label } from '@/shared/ui/generated/label';
 
 import { HomePageVM } from '../../model';
 

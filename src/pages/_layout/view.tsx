@@ -7,7 +7,7 @@ import { cx } from 'yummies/css';
 
 import { logoImageUrl } from '@/shared/assets';
 import { useRootStore } from '@/shared/lib/mobx/root-store';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/generated/button';
 
 import { LayoutVM } from './model';
 
@@ -75,7 +75,7 @@ export const LayoutView = observer(
             {theme.theme === 'dark' && <Moon />}
           </Button>
         </div>
-        {children}
+        <div className={'flex flex-col relative'}>{children}</div>
       </div>
     );
   },

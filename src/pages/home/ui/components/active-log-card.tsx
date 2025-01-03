@@ -4,9 +4,9 @@ import { useViewModel } from 'mobx-vm-entities';
 import { useEffect, useRef } from 'react';
 import { ms } from 'yummies/ms';
 
-import { Button } from '@/shared/ui/button';
-import { Card } from '@/shared/ui/card';
-import { Textarea } from '@/shared/ui/textarea';
+import { Button } from '@/shared/ui/generated/button';
+import { Card } from '@/shared/ui/generated/card';
+import { Textarea } from '@/shared/ui/generated/textarea';
 
 import { HomePageVM } from '../../model';
 

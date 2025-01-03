@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useViewModel } from 'mobx-vm-entities';
 
-import { Input } from '@/shared/ui/input';
+import { Input } from '@/shared/ui/generated/input';
 
 import { HomePageVM } from '../../model';
 
