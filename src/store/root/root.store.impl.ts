@@ -4,14 +4,14 @@ import {
   ViewModelStore,
   ViewModelStoreImpl,
 } from 'mobx-vm-entities';
+import { IMobxRouter, MobxRouter } from 'mobx-wouter';
 
 import { TimeTrackerModel } from '@/entities/time-tracker/model';
 import { ToastStore } from '@/shared/_entities/toast';
-import { MobxRouter } from '@/shared/lib/mobx/router';
 import { ThemeStoreImpl } from '@/shared/lib/mobx/theme';
 
 export class RootStoreImpl implements RootStore {
-  router: MobxRouter;
+  router: IMobxRouter;
   theme: TwoColorThemeStore;
   viewModels: ViewModelStore<AnyViewModel>;
   toasts: ToastStore;
@@ -21,7 +21,10 @@ export class RootStoreImpl implements RootStore {
     this.theme = new ThemeStoreImpl();
     this.toasts = new ToastStore();
     this.viewModels = new ViewModelStoreImpl();
-    this.router = new MobxRouter();
+    this.router = new MobxRouter({
+      type: 'hash',
+      baseUrl: buildEnvs.BASE_URL || '/',
+    });
     this.entities = {
       timeTracker: new TimeTrackerModel({
         rootStore: this,
