@@ -17,7 +17,7 @@ interface LayoutViewProps extends ViewModelProps<LayoutVM> {
 }
 
 export const LayoutView = observer(({ children, model }: LayoutViewProps) => {
-  const { theme } = useRootStore();
+  const { theme, router } = useRootStore();
 
   return (
     <div
@@ -47,6 +47,10 @@ export const LayoutView = observer(({ children, model }: LayoutViewProps) => {
           </h1>
           <Link
             href={'/about'}
+            onClick={(e) => {
+              e.preventDefault();
+              router.navigate('/about');
+            }}
             className={'text-xs absolute -bottom-3.5 left-0 text-link'}
           >
             О проекте
