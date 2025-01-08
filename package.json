@@ -49,7 +49,7 @@
     "mobx-react-lite": "^4.1.0",
     "mobx-shared-entities": "^4.0.9",
     "mobx-vm-entities": "^5.0.12",
-    "mobx-wouter": "^1.2.19",
+    "mobx-wouter": "^1.2.21",
     "next-themes": "^0.2.1",
     "patronum": "^2.3.0",
     "prettier": "^3.4.2",
