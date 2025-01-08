@@ -24,7 +24,6 @@ export class RootStoreImpl implements RootStore {
     this.router = new MobxRouter({
       type: 'hash',
       baseUrl: buildEnvs.BASE_URL || '/',
-      useStartViewTransition: true,
     });
     this.entities = {
       timeTracker: new TimeTrackerModel({
