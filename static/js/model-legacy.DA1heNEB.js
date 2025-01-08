@@ -1,1 +1,0 @@
-System.register(["./bundle-legacy.BMN2hOpm.js"],(function(e,t){"use strict";var s;return{setters:[e=>{s=e.P}],execute:function(){e("AboutPageVM",class extends s{mount(){super.mount(),document.title="О проекте"}})}}}));
