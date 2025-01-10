@@ -1,7 +1,7 @@
 import { action, autorun, computed } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
 import { formatDate } from 'yummies/date-time';
-import { sanitizeHtml } from 'yummies/html';
+import { sanitizeHtml, startViewTransitionSafety } from 'yummies/html';
 
 import { LogRaw, Project, ProjectLog } from '@/entities/time-tracker/model';
 import { rootStore } from '@/store';
@@ -70,59 +70,63 @@ export class HomePageVM extends PageViewModelImpl {
 
   @action.bound
   finishActiveLog() {
-    if (
-      !this.timeTracker.activeLog ||
-      !this.timeTracker.activeProject ||
-      !this.timeTracker.projects
-    ) {
-      return;
-    }
+    startViewTransitionSafety(() => {
+      if (
+        !this.timeTracker.activeLog ||
+        !this.timeTracker.activeProject ||
+        !this.timeTracker.projects
+      ) {
+        return;
+      }
 
-    if (this.timeTracker.activeLog.spentTime <= this.timeTracker.logMinTime) {
-      rootStore.toasts.create({
-        type: 'error',
-        message: 'Слишком мало времени на один лог.',
-        description: 'Нужно логировать как минимум 1 минуту',
-      });
+      if (this.timeTracker.activeLog.spentTime <= this.timeTracker.logMinTime) {
+        rootStore.toasts.create({
+          type: 'error',
+          message: 'Слишком мало времени на один лог.',
+          description: 'Нужно логировать как минимум 1 минуту',
+        });
+        this.timeTracker.activeLog = null;
+        this.timeTracker.ticker.reset();
+        return;
+      }
+
+      let activeProject: Maybe<Project>;
+
+      if (this.timeTracker.activeProject) {
+        activeProject = this.timeTracker.activeProject;
+      } else {
+        activeProject = this.timeTracker.projects.find(
+          (project) => project.name === this.timeTracker.activeLog?.projectName,
+        );
+      }
+
+      if (activeProject) {
+        activeProject.logs.push({
+          startDate: this.timeTracker.activeLog.startDate,
+          spentTime: this.timeTracker.activeLog.spentTime,
+          meta: this.timeTracker.activeLog.meta,
+        });
+        rootStore.toasts.create({
+          type: 'success',
+          message: 'Хорошая работа!',
+          description: `Лог добавлен в проект "${activeProject.name}"`,
+        });
+      }
+
       this.timeTracker.activeLog = null;
       this.timeTracker.ticker.reset();
-      return;
-    }
-
-    let activeProject: Maybe<Project>;
-
-    if (this.timeTracker.activeProject) {
-      activeProject = this.timeTracker.activeProject;
-    } else {
-      activeProject = this.timeTracker.projects.find(
-        (project) => project.name === this.timeTracker.activeLog?.projectName,
-      );
-    }
-
-    if (activeProject) {
-      activeProject.logs.push({
-        startDate: this.timeTracker.activeLog.startDate,
-        spentTime: this.timeTracker.activeLog.spentTime,
-        meta: this.timeTracker.activeLog.meta,
-      });
-      rootStore.toasts.create({
-        type: 'success',
-        message: 'Хорошая работа!',
-        description: `Лог добавлен в проект "${activeProject.name}"`,
-      });
-    }
-
-    this.timeTracker.activeLog = null;
-    this.timeTracker.ticker.reset();
+    });
   }
 
   @action.bound
   pauseActiveLog() {
-    if (this.timeTracker.activeLog && this.timeTracker.activeProject) {
-      this.timeTracker.activeLog.status = 'paused';
-      this.timeTracker.activeLog.lastTickDate = Date.now();
-      this.timeTracker.ticker.stop();
-    }
+    startViewTransitionSafety(() => {
+      if (this.timeTracker.activeLog && this.timeTracker.activeProject) {
+        this.timeTracker.activeLog.status = 'paused';
+        this.timeTracker.activeLog.lastTickDate = Date.now();
+        this.timeTracker.ticker.stop();
+      }
+    });
   }
 
   @action.bound
@@ -171,10 +175,12 @@ export class HomePageVM extends PageViewModelImpl {
 
   @action.bound
   createActiveLog(log: LogRaw) {
-    this.timeTracker.activeLog = log;
-    if (this.timeTracker.activeLog.status === 'active') {
-      this.timeTracker.ticker.start();
-    }
+    startViewTransitionSafety(() => {
+      this.timeTracker.activeLog = log;
+      if (this.timeTracker.activeLog.status === 'active') {
+        this.timeTracker.ticker.start();
+      }
+    });
   }
 
   @action.bound
