@@ -11,7 +11,7 @@ import { LogRaw, Project } from './model.types';
 
 export class TimeTrackerModel {
   private abortSignal = container.inject(AbortController).signal;
-  private storage = container.inject(StorageModel, this.abortSignal);
+  private storage = container.inject(StorageModel);
 
   ticker: Ticker = container.inject(Ticker, {
     ticksPer: ms(1, 'sec'),
