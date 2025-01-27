@@ -8,10 +8,20 @@ import { ToastStore } from '@/shared/_entities/toast';
 import { ThemeStoreImpl } from '../mobx/theme';
 
 container.configure({
-  fallbackTag: (value) => ({
-    token: value,
-    scope: 'container',
-  }),
+  fallbackTag: (value) => {
+    return {
+      token: value,
+      scope: 'container',
+    };
+  },
+});
+
+tag({
+  token: AbortController,
+  scope: 'container',
+  destroy: (abortController) => {
+    abortController.abort();
+  },
 });
 
 export const tags = {
