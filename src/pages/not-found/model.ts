@@ -1,9 +1,12 @@
+import { container } from 'mobidic';
 import { PageViewModelImpl } from 'mobx-wouter';
 
-import { rootStore } from '@/store';
+import { tags } from '@/shared/lib/di';
 
 export class NotFoundPageVM extends PageViewModelImpl {
+  private router = container.inject(tags.router);
+
   mount(): void {
-    rootStore.router.navigate('/', { replace: true });
+    this.router.navigate('/', { replace: true });
   }
 }

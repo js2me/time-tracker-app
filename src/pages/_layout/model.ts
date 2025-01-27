@@ -1,13 +1,18 @@
+import { container } from 'mobidic';
 import { ViewModelImpl } from 'mobx-vm-entities';
 
-import { rootStore } from '@/store';
+import { TimeTrackerModel } from '@/entities/time-tracker/model';
+import { tags } from '@/shared/lib/di';
 
 export class LayoutVM extends ViewModelImpl {
+  private timeTracker = container.inject(TimeTrackerModel);
+  private router = container.inject(tags.router);
+
   get isLogoAnimating() {
-    return rootStore.entities.timeTracker.isActiveLogActive;
+    return this.timeTracker.isActiveLogActive;
   }
 
   handleClickLogo = () => {
-    rootStore.router.navigate('/');
+    this.router.navigate('/');
   };
 }

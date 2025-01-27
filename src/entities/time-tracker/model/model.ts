@@ -1,4 +1,5 @@
 import { clamp } from 'lodash-es';
+import { container } from 'mobidic';
 import { action, computed, observable, reaction } from 'mobx';
 import { Ticker } from 'mobx-shared-entities/ticker';
 import { timeDuration } from 'yummies/date-time';
@@ -6,11 +7,16 @@ import { ms } from 'yummies/ms';
 
 import { StorageModel } from '@/shared/lib/mobx/storage';
 
-import { LogRaw, Project, TimeTrackerModelConfig } from './model.types';
+import { LogRaw, Project } from './model.types';
 
 export class TimeTrackerModel {
-  private storage: StorageModel;
-  ticker: Ticker;
+  private abortSignal = container.inject(AbortController).signal;
+  private storage = container.inject(StorageModel);
+
+  ticker: Ticker = new Ticker({
+    ticksPer: ms(1, 'sec'),
+    abortSignal: this.abortSignal,
+  });
 
   @observable
   accessor projects: Project[] = [];
@@ -21,13 +27,7 @@ export class TimeTrackerModel {
   @observable
   accessor activeLog: LogRaw | null = null;
 
-  constructor(private config: TimeTrackerModelConfig) {
-    this.storage = new StorageModel();
-    this.ticker = new Ticker({
-      ticksPer: ms(1, 'sec'),
-      abortSignal: this.config.abortSignal,
-    });
-
+  constructor() {
     this.storage.syncProperty(this, 'projects', { key: '$store_projects' });
     this.storage.syncProperty(this, 'activeProject', {
       key: '$store_active-project',
@@ -38,12 +38,12 @@ export class TimeTrackerModel {
       this.ticker.start();
     }
     reaction(() => this.ticker.ticks, this.handleTick, {
-      signal: this.config.abortSignal,
+      signal: this.abortSignal,
     });
     reaction(
       () => JSON.stringify(this.activeProject),
       this.handleActiveProjectChanged,
-      { signal: this.config.abortSignal },
+      { signal: this.abortSignal },
     );
   }
 

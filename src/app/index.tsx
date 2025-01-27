@@ -2,14 +2,15 @@ import { observer } from 'mobx-react-lite';
 import { ViewModelsProvider } from 'mobx-vm-entities';
 import { ErrorBoundary } from 'react-simple-error-boundary';
 
-import { useRootStore } from '@/shared/lib/mobx/root-store';
+import { container, tags } from '@/shared/lib/di';
 import { Toaster } from '@/shared/ui/generated/sonner';
 import { TooltipProvider } from '@/shared/ui/generated/tooltip';
 
 import { Routing } from './routing';
 
 export const App = observer(() => {
-  const { viewModels, router } = useRootStore();
+  const viewModels = container.get(tags.viewModels);
+  const router = container.get(tags.router);
 
   return (
     <ViewModelsProvider value={viewModels}>

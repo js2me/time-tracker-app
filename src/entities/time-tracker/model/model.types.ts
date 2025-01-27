@@ -1,8 +1,3 @@
-export interface TimeTrackerModelConfig {
-  abortSignal?: AbortSignal;
-  rootStore: RootStore;
-}
-
 export interface Project {
   name: string;
   logs: ProjectLog[];

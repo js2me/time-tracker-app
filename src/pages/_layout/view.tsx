@@ -1,4 +1,5 @@
 import { Moon, Sun, SunMoon } from 'lucide-react';
+import { container } from 'mobidic';
 import { observer } from 'mobx-react-lite';
 import { ViewModelProps } from 'mobx-vm-entities';
 import { ReactNode } from 'react';
@@ -6,7 +7,7 @@ import { Link } from 'wouter';
 import { cx } from 'yummies/css';
 
 import { logoImageUrl } from '@/shared/assets';
-import { useRootStore } from '@/shared/lib/mobx/root-store';
+import { tags } from '@/shared/lib/di';
 import { Button } from '@/shared/ui/generated/button';
 
 import { LayoutVM } from './model';
@@ -17,7 +18,8 @@ interface LayoutViewProps extends ViewModelProps<LayoutVM> {
 }
 
 export const LayoutView = observer(({ children, model }: LayoutViewProps) => {
-  const { theme, router } = useRootStore();
+  const theme = container.get(tags.theme);
+  const router = container.get(tags.router);
 
   return (
     <div

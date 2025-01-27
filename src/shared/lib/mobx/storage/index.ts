@@ -1,3 +1,4 @@
+import { container } from 'mobidic';
 import {
   StorageModel as StorageModelBase,
   StorageType,
@@ -6,11 +7,12 @@ import {
 import { storageKeyPrefix } from '@/shared/config/storage';
 
 export class StorageModel extends StorageModelBase {
-  constructor(abortSignal?: AbortSignal, type?: StorageType) {
+  protected abortController = container.inject(AbortController);
+
+  constructor(type?: StorageType) {
     super({
       prefix: storageKeyPrefix,
       type: type ?? 'local',
-      abortSignal,
     });
   }
 }

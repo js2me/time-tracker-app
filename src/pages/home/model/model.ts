@@ -1,10 +1,16 @@
+import { container } from 'mobidic';
 import { action, autorun, computed } from 'mobx';
 import { PageViewModelImpl } from 'mobx-wouter';
 import { formatDate } from 'yummies/date-time';
 import { sanitizeHtml, startViewTransitionSafety } from 'yummies/html';
 
-import { LogRaw, Project, ProjectLog } from '@/entities/time-tracker/model';
-import { rootStore } from '@/store';
+import {
+  LogRaw,
+  Project,
+  ProjectLog,
+  TimeTrackerModel,
+} from '@/entities/time-tracker/model';
+import { tags } from '@/shared/lib/di';
 
 interface LogGroup {
   label: string;
@@ -12,7 +18,8 @@ interface LogGroup {
 }
 
 export class HomePageVM extends PageViewModelImpl {
-  timeTracker = rootStore.entities.timeTracker;
+  timeTracker = container.inject(TimeTrackerModel);
+  private toasts = container.inject(tags.toaster);
 
   get hasActiveProject() {
     return true;
@@ -62,7 +69,7 @@ export class HomePageVM extends PageViewModelImpl {
 
     this.timeTracker.activeProject.logs.push(log);
 
-    rootStore.toasts.create({
+    this.toasts.create({
       type: 'success',
       message: 'Лог добавлен!',
     });
@@ -80,7 +87,7 @@ export class HomePageVM extends PageViewModelImpl {
       }
 
       if (this.timeTracker.activeLog.spentTime <= this.timeTracker.logMinTime) {
-        rootStore.toasts.create({
+        this.toasts.create({
           type: 'error',
           message: 'Слишком мало времени на один лог.',
           description: 'Нужно логировать как минимум 1 минуту',
@@ -106,7 +113,7 @@ export class HomePageVM extends PageViewModelImpl {
           spentTime: this.timeTracker.activeLog.spentTime,
           meta: this.timeTracker.activeLog.meta,
         });
-        rootStore.toasts.create({
+        this.toasts.create({
           type: 'success',
           message: 'Хорошая работа!',
           description: `Лог добавлен в проект "${activeProject.name}"`,
@@ -149,7 +156,7 @@ export class HomePageVM extends PageViewModelImpl {
     this.timeTracker.projects.push({ ...project });
     this.timeTracker.activeProject = { ...project };
 
-    rootStore.toasts.create({
+    this.toasts.create({
       type: 'success',
       message: 'Проект успешно сделан!',
     });
@@ -166,7 +173,7 @@ export class HomePageVM extends PageViewModelImpl {
   resetLogsForActiveProject() {
     if (this.timeTracker.activeProject) {
       this.timeTracker.activeProject.logs = [];
-      rootStore.toasts.create({
+      this.toasts.create({
         type: 'success',
         message: 'Всё сброшено!',
       });
@@ -210,7 +217,7 @@ export class HomePageVM extends PageViewModelImpl {
         (_, logIndex) => logIndex !== index,
       );
 
-    rootStore.toasts.create({
+    this.toasts.create({
       type: 'success',
       message: 'Лог удалён!',
     });
@@ -243,7 +250,7 @@ ${this.timeTracker.activeProject.logs
 `;
 
     navigator.clipboard.writeText(textToClipboard);
-    rootStore.toasts.create({
+    this.toasts.create({
       message: 'Скопировано в буфер обмена',
     });
   };
