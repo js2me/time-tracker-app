@@ -148,4 +148,4 @@ export class TimeTrackerModel {
       }
     }
   };
-} 
+}
