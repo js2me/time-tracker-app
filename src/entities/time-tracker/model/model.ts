@@ -1,5 +1,6 @@
 import { clamp } from 'lodash-es';
-import { container, tag } from 'mobidic';
+import { container } from 'mobidic';
+import { injectable } from 'mobidic/decorators';
 import { action, computed, observable, reaction } from 'mobx';
 import { Ticker } from 'mobx-shared-entities/ticker';
 import { timeDuration } from 'yummies/date-time';
@@ -9,6 +10,7 @@ import { StorageModel } from '@/shared/lib/mobx/storage';
 
 import { LogRaw, Project } from './model.types';
 
+@injectable({ scope: 'singleton' })
 export class TimeTrackerModel {
   private abortSignal = container.inject(AbortController).signal;
   private storage = container.inject(StorageModel);
@@ -146,9 +148,4 @@ export class TimeTrackerModel {
       }
     }
   };
-}
-
-tag({
-  token: TimeTrackerModel,
-  scope: 'singleton',
-});
+} 

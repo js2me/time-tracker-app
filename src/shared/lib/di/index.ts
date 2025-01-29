@@ -1,11 +1,14 @@
 import { container, tag } from 'mobidic';
 import { TwoColorThemeStore } from 'mobx-shared-entities/theme';
-import { ViewModelStore, ViewModelStoreImpl } from 'mobx-vm-entities';
+import { viewModelsConfig, ViewModelStore, ViewModelStoreImpl } from 'mobx-vm-entities';
 import { IMobxRouter, MobxRouter } from 'mobx-wouter';
 
 import { ToastStore } from '@/shared/_entities/toast';
 
 import { ThemeStoreImpl } from '../mobx/theme';
+
+viewModelsConfig.factory = (config) => container.inject(config.VM, config);
+viewModelsConfig.onUnmount = (vm) => container.destroy(vm);
 
 container.configure({
   fallbackTag: (value) => {
@@ -18,7 +21,7 @@ container.configure({
 
 tag({
   token: AbortController,
-  scope: 'container',
+  scope: 'resolution',
   destroy: (abortController) => {
     abortController.abort();
   },
@@ -60,6 +63,12 @@ export const tags = {
         useStartViewTransition: true,
       }),
   }),
+  abortSignal: tag({
+    scope: 'resolution',
+    value: () => container.inject(AbortController).signal,
+  })
 } as const;
+
+console.info(container)
 
 export * from 'mobidic';
