@@ -1,10 +1,10 @@
 import { container } from 'mobidic';
-import { ViewModelImpl } from 'mobx-vm-entities';
+import { ViewModelBase } from 'mobx-view-model';
 
 import { TimeTrackerModel } from '@/entities/time-tracker/model';
 import { tags } from '@/shared/lib/di';
 
-export class LayoutVM extends ViewModelImpl {
+export class LayoutVM extends ViewModelBase {
   private timeTracker = container.inject(TimeTrackerModel);
   private router = container.inject(tags.router);
 

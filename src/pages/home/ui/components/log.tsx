@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/duplicates-in-character-class */
 import { Save, SquarePen, X } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-vm-entities';
+import { useViewModel } from 'mobx-view-model';
 import { useLayoutEffect, useState } from 'react';
 import { useToggle } from 'react-shared-utils/hooks';
 import { formatDate, timeDuration } from 'yummies/date-time';

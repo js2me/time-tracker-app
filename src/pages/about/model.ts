@@ -1,6 +1,6 @@
-import { PageViewModelImpl } from 'mobx-wouter';
+import { PageViewModelBase } from 'mobx-wouter';
 
-export class AboutPageVM extends PageViewModelImpl {
+export class AboutPageVM extends PageViewModelBase {
   mount(): void {
     super.mount();
 

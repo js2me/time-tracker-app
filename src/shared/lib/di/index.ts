@@ -3,8 +3,8 @@ import { TwoColorThemeStore } from 'mobx-shared-entities/theme';
 import {
   viewModelsConfig,
   ViewModelStore,
-  ViewModelStoreImpl,
-} from 'mobx-vm-entities';
+  ViewModelStoreBase,
+} from 'mobx-view-model';
 import { IMobxRouter, MobxRouter } from 'mobx-wouter';
 
 import { ToastStore } from '@/shared/_entities/toast';
@@ -44,7 +44,7 @@ export const tags = {
    */
   viewModels: tag<ViewModelStore>({
     value: () =>
-      new ViewModelStoreImpl({
+      new ViewModelStoreBase({
         vmConfig: {
           factory: (config) => container.inject(config.VM, config),
         },

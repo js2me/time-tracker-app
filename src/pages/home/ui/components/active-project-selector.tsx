@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-vm-entities';
+import { useViewModel } from 'mobx-view-model';
 
 import {
   Select,

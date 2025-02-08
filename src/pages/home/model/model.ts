@@ -1,6 +1,6 @@
 import { container } from 'mobidic';
 import { action, autorun, computed } from 'mobx';
-import { PageViewModelImpl } from 'mobx-wouter';
+import { PageViewModelBase } from 'mobx-wouter';
 import { formatDate } from 'yummies/date-time';
 import { sanitizeHtml, startViewTransitionSafety } from 'yummies/html';
 
@@ -17,7 +17,7 @@ interface LogGroup {
   logs: (ProjectLog & { index: number })[];
 }
 
-export class HomePageVM extends PageViewModelImpl {
+export class HomePageVM extends PageViewModelBase {
   timeTracker = container.inject(TimeTrackerModel);
   private toasts = container.inject(tags.toaster);
 
