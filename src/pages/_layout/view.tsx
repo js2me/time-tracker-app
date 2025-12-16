@@ -47,16 +47,28 @@ export const LayoutView = observer(({ children, model }: LayoutViewProps) => {
           >
             Тайм Трекер Машина
           </h1>
-          <Link
-            href={'/about'}
-            onClick={(e) => {
-              e.preventDefault();
-              router.navigate('/about');
-            }}
-            className={'text-xs absolute -bottom-3.5 left-0 text-link'}
-          >
-            О проекте
-          </Link>
+          <div className={'flex flex-row gap-2 absolute -bottom-3.5 left-0 '}>
+            <Link
+              href={'/about'}
+              onClick={(e) => {
+                e.preventDefault();
+                router.navigate('/about');
+              }}
+              className={'text-xs text-link'}
+            >
+              О проекте
+            </Link>
+            <Link
+              href={'/import-export'}
+              onClick={(e) => {
+                e.preventDefault();
+                router.navigate('/import-export');
+              }}
+              className={'text-xs text-link'}
+            >
+              Импорт/экспорт
+            </Link>
+          </div>
         </div>
         <Button
           variant={'ghost'}

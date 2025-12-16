@@ -1,7 +1,14 @@
 import { clamp } from 'lodash-es';
 import { container } from 'mobidic';
 import { injectable } from 'mobidic/decorators';
-import { action, computed, observable, reaction } from 'mobx';
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  toJS,
+} from 'mobx';
 import { Ticker } from 'mobx-shared-entities/ticker';
 import { timeDuration } from 'yummies/date-time';
 import { ms } from 'yummies/ms';
@@ -47,6 +54,30 @@ export class TimeTrackerModel {
       this.handleActiveProjectChanged,
       { signal: this.abortSignal },
     );
+  }
+
+  export() {
+    return {
+      projects: toJS(this.projects),
+      activeProject: toJS(this.activeProject),
+      activeLog: toJS(this.activeLog),
+    };
+  }
+
+  import({
+    projects,
+    activeProject,
+    activeLog,
+  }: {
+    projects: Project[];
+    activeProject: Project | null;
+    activeLog: LogRaw | null;
+  }) {
+    runInAction(() => {
+      this.projects = projects;
+      this.activeProject = activeProject;
+      this.activeLog = activeLog;
+    });
   }
 
   @computed

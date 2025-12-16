@@ -62,7 +62,7 @@
     "sonner": "^1.7.1",
     "storage-sync-accessor-decorator": "^1.0.3",
     "wouter": "^3.3.5",
-    "yummies": "^3.0.7"
+    "yummies": "^6.7.1"
   },
   "devDependencies": {
     "@effector/swc-plugin": "^0.0.10",
