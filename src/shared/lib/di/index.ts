@@ -5,7 +5,6 @@ import {
   ViewModelStore,
   ViewModelStoreBase,
 } from 'mobx-view-model';
-import { IMobxRouter, MobxRouter } from 'mobx-wouter';
 
 import { ToastStore } from '@/shared/_entities/toast';
 
@@ -54,18 +53,6 @@ export const tags = {
   toaster: tag<ToastStore>({
     value: () => new ToastStore(),
     scope: 'singleton',
-  }),
-  /**
-   * Роутер приложения
-   */
-  router: tag<IMobxRouter>({
-    scope: 'singleton',
-    value: () =>
-      new MobxRouter({
-        type: 'hash',
-        baseUrl: buildEnvs.BASE_URL || '/',
-        useStartViewTransition: true,
-      }),
   }),
   abortSignal: tag({
     scope: 'resolution',

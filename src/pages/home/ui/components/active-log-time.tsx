@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-view-model';
+import { useViewModel } from 'mobx-view-model-react';
 import { HTMLAttributes, ReactNode } from 'react';
 import { formatDate } from 'yummies/date-time';
 import { ms } from 'yummies/ms';

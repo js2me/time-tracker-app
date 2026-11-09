@@ -1,6 +1,6 @@
 import { EraserIcon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-view-model';
+import { useViewModel } from 'mobx-view-model-react';
 import { useLayoutEffect, useRef } from 'react';
 import { useToggle } from 'react-shared-utils/hooks';
 

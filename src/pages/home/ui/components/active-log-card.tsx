@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-view-model';
+import { useViewModel } from 'mobx-view-model-react';
 import { useEffect, useRef } from 'react';
 import { ms } from 'yummies/ms';
 

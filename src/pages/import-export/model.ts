@@ -1,13 +1,17 @@
 import { container } from 'mobidic';
-import { PageViewModelBase } from 'mobx-wouter';
+import { RouteViewModel } from 'mobx-route/view-model';
 import { createRef } from 'yummies/mobx';
 
 import { TimeTrackerModel } from '@/entities/time-tracker/model';
 import { tags } from '@/shared/lib/di';
+import { routes } from '@/shared/lib/routes';
 
-export class ImportExportPageVM extends PageViewModelBase {
+export class ImportExportPageVM extends RouteViewModel<
+  typeof routes.importExport
+> {
+  readonly route = routes.importExport;
+
   private timeTracker = container.inject(TimeTrackerModel);
-  private router = container.inject(tags.router);
   private toasts = container.inject(tags.toaster);
 
   importContentRef = createRef<HTMLInputElement>();

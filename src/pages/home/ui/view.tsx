@@ -1,5 +1,4 @@
-import { observer } from 'mobx-react-lite';
-import { ViewModelProps } from 'mobx-view-model';
+import { withViewModel } from 'mobx-view-model-react';
 
 import { HomePageVM } from '../model';
 
@@ -13,37 +12,35 @@ import { ManualAddLog } from './components/manual-add-log';
 import { RateInput } from './components/rate-input';
 import { ResetTracking } from './components/reset-tracking';
 
-export const HomePageView = observer(
-  ({ model }: ViewModelProps<HomePageVM>) => {
-    return (
-      <>
-        <div>
-          <div className={'flex flex-row justify-between'}>
-            <div>
-              <span className={'text-xs text-muted-foreground'}>проект:</span>
-              <div className={'flex w-[260px] flex-row gap-2'}>
-                <ActiveProjectSelector />
-                <AddProject />
-              </div>
-            </div>
-            <div>
-              <span className={'text-xs text-muted-foreground'}>ставка:</span>
-              <RateInput />
+export const HomePage = withViewModel(HomePageVM, ({ model }) => {
+  return (
+    <>
+      <div>
+        <div className={'flex flex-row justify-between'}>
+          <div>
+            <span className={'text-xs text-muted-foreground'}>проект:</span>
+            <div className={'flex w-[260px] flex-row gap-2'}>
+              <ActiveProjectSelector />
+              <AddProject />
             </div>
           </div>
-          <ActiveLogCard className={'mb-6 mr-auto mt-10 w-full'} />
-          {model.hasActiveProject && (
-            <div className={'mb-4 flex flex-1 flex-row gap-2'}>
-              <ManualAddLog className={'mr-auto'} />
-
-              <ResetTracking />
-              <CopyData />
-            </div>
-          )}
-          <LogsTotal />
-          <Logs />
+          <div>
+            <span className={'text-xs text-muted-foreground'}>ставка:</span>
+            <RateInput />
+          </div>
         </div>
-      </>
-    );
-  },
-);
+        <ActiveLogCard className={'mb-6 mr-auto mt-10 w-full'} />
+        {model.hasActiveProject && (
+          <div className={'mb-4 flex flex-1 flex-row gap-2'}>
+            <ManualAddLog className={'mr-auto'} />
+
+            <ResetTracking />
+            <CopyData />
+          </div>
+        )}
+        <LogsTotal />
+        <Logs />
+      </div>
+    </>
+  );
+});

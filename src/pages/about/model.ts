@@ -1,6 +1,10 @@
-import { PageViewModelBase } from 'mobx-wouter';
+import { RouteViewModel } from 'mobx-route/view-model';
 
-export class AboutPageVM extends PageViewModelBase {
+import { routes } from '@/shared/lib/routes';
+
+export class AboutPageVM extends RouteViewModel<typeof routes.about> {
+  readonly route = routes.about;
+
   mount(): void {
     super.mount();
 

@@ -1,7 +1,11 @@
-import { observer } from 'mobx-react-lite';
-import { Link } from 'wouter';
+import { Link } from 'mobx-route/react';
+import { withViewModel } from 'mobx-view-model-react';
 
-export const AboutPageView = observer(() => {
+import { routes } from '@/shared/lib/routes';
+
+import { AboutPageVM } from './model';
+
+export const AboutPageContent = withViewModel(AboutPageVM, () => {
   return (
     <div className={'text-lg leading-6 flex flex-col gap-2'}>
       <p>
@@ -38,7 +42,7 @@ export const AboutPageView = observer(() => {
         </a>
       </p>
       <p className={'mb-2'}>Спасибо за внимание:)</p>
-      <Link to={'/'} className={'text-link'}>
+      <Link to={routes.home} className={'text-link'}>
         Назад
       </Link>
     </div>
