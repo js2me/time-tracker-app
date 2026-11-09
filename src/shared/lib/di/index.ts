@@ -5,11 +5,9 @@ import {
   ViewModelStore,
   ViewModelStoreBase,
 } from 'mobx-view-model';
-import { IRouter } from 'mobx-wouter/router';
 
 import { ToastStore } from '@/shared/_entities/toast';
 
-import { HashRouter } from '../hash-router';
 import { ThemeStoreImpl } from '../mobx/theme';
 
 viewModelsConfig.factory = (config) => container.inject(config.VM, config);
@@ -55,13 +53,6 @@ export const tags = {
   toaster: tag<ToastStore>({
     value: () => new ToastStore(),
     scope: 'singleton',
-  }),
-  /**
-   * Роутер приложения
-   */
-  router: tag<IRouter>({
-    scope: 'singleton',
-    value: () => new HashRouter(buildEnvs.BASE_URL || '/'),
   }),
   abortSignal: tag({
     scope: 'resolution',

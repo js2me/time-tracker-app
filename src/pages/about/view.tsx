@@ -1,4 +1,6 @@
-import { Link } from 'wouter';
+import { Link } from 'mobx-route/react';
+
+import { routes } from '@/shared/lib/routes';
 
 export const AboutPageView = () => {
   return (
@@ -37,7 +39,7 @@ export const AboutPageView = () => {
         </a>
       </p>
       <p className={'mb-2'}>Спасибо за внимание:)</p>
-      <Link to={'/'} className={'text-link'}>
+      <Link to={routes.home} className={'text-link'}>
         Назад
       </Link>
     </div>

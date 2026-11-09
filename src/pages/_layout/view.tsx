@@ -1,12 +1,13 @@
 import { Moon, Sun, SunMoon } from 'lucide-react';
 import { container } from 'mobidic';
+import { Link } from 'mobx-route/react';
 import { ViewModelProps } from 'mobx-view-model-react';
 import { ReactNode } from 'react';
-import { Link } from 'wouter';
 import { cx } from 'yummies/css';
 
 import { logoImageUrl } from '@/shared/assets';
 import { tags } from '@/shared/lib/di';
+import { routes } from '@/shared/lib/routes';
 import { Button } from '@/shared/ui/generated/button';
 
 import { LayoutVM } from './model';
@@ -18,7 +19,6 @@ interface LayoutViewProps extends ViewModelProps<LayoutVM> {
 
 export const LayoutView = ({ children, model }: LayoutViewProps) => {
   const theme = container.get(tags.theme);
-  const router = container.get(tags.router);
 
   return (
     <div
@@ -47,24 +47,10 @@ export const LayoutView = ({ children, model }: LayoutViewProps) => {
             Тайм Трекер Машина
           </h1>
           <div className={'flex flex-row gap-2 absolute -bottom-3.5 left-0 '}>
-            <Link
-              href={'/about'}
-              onClick={(e) => {
-                e.preventDefault();
-                router.navigate('/about');
-              }}
-              className={'text-xs text-link'}
-            >
+            <Link to={routes.about} className={'text-xs text-link'}>
               О проекте
             </Link>
-            <Link
-              href={'/import-export'}
-              onClick={(e) => {
-                e.preventDefault();
-                router.navigate('/import-export');
-              }}
-              className={'text-xs text-link'}
-            >
+            <Link to={routes.importExport} className={'text-xs text-link'}>
               Импорт/экспорт
             </Link>
           </div>

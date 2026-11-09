@@ -10,13 +10,12 @@ import { Routing } from './routing';
 
 export const App = observer(() => {
   const viewModels = container.get(tags.viewModels);
-  const router = container.get(tags.router);
 
   return (
     <ViewModelsProvider value={viewModels}>
       <TooltipProvider>
         <ErrorBoundary>
-          <Routing useHashRouting baseUrl={router.baseUrl} />
+          <Routing />
         </ErrorBoundary>
         <Toaster position={'bottom-center'} />
       </TooltipProvider>
