@@ -1,12 +1,11 @@
-import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-view-model';
+import { useViewModel } from 'mobx-view-model-react';
 
 import { Button } from '@/shared/ui/generated/button';
 import { Input } from '@/shared/ui/generated/input';
 
 import { ImportExportPageVM } from './model';
 
-export const ImportExportPageView = observer(() => {
+export const ImportExportPageView = () => {
   const model = useViewModel<ImportExportPageVM>();
 
   return (
@@ -24,4 +23,4 @@ export const ImportExportPageView = observer(() => {
       </div>
     </div>
   );
-});
+};

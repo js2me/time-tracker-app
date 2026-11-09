@@ -1,7 +1,6 @@
-import { observer } from 'mobx-react-lite';
 import { Link } from 'wouter';
 
-export const AboutPageView = observer(() => {
+export const AboutPageView = () => {
   return (
     <div className={'text-lg leading-6 flex flex-col gap-2'}>
       <p>
@@ -43,4 +42,4 @@ export const AboutPageView = observer(() => {
       </Link>
     </div>
   );
-});
+};

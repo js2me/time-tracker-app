@@ -1,6 +1,6 @@
 import { container } from 'mobidic';
 import { action, autorun, computed } from 'mobx';
-import { PageViewModelBase } from 'mobx-wouter';
+import { PageViewModelBase } from 'mobx-wouter/page-view-model';
 import { formatDate } from 'yummies/date-time';
 import { sanitizeHtml, startViewTransitionSafety } from 'yummies/html';
 

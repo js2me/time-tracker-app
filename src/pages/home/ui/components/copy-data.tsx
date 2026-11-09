@@ -1,6 +1,6 @@
 import { CopyIcon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
-import { useViewModel } from 'mobx-view-model';
+import { useViewModel } from 'mobx-view-model-react';
 
 import { Button } from '@/shared/ui/generated/button';
 

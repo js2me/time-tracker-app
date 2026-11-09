@@ -1,5 +1,5 @@
 import { container } from 'mobidic';
-import { PageViewModelBase } from 'mobx-wouter';
+import { PageViewModelBase } from 'mobx-wouter/page-view-model';
 
 import { tags } from '@/shared/lib/di';
 

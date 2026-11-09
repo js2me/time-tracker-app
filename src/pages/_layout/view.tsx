@@ -1,7 +1,6 @@
 import { Moon, Sun, SunMoon } from 'lucide-react';
 import { container } from 'mobidic';
-import { observer } from 'mobx-react-lite';
-import { ViewModelProps } from 'mobx-view-model';
+import { ViewModelProps } from 'mobx-view-model-react';
 import { ReactNode } from 'react';
 import { Link } from 'wouter';
 import { cx } from 'yummies/css';
@@ -17,7 +16,7 @@ interface LayoutViewProps extends ViewModelProps<LayoutVM> {
   children?: ReactNode;
 }
 
-export const LayoutView = observer(({ children, model }: LayoutViewProps) => {
+export const LayoutView = ({ children, model }: LayoutViewProps) => {
   const theme = container.get(tags.theme);
   const router = container.get(tags.router);
 
@@ -84,4 +83,4 @@ export const LayoutView = observer(({ children, model }: LayoutViewProps) => {
       <div className={'flex flex-col relative'}>{children}</div>
     </div>
   );
-});
+};

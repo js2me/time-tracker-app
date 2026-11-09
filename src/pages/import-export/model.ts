@@ -1,5 +1,5 @@
 import { container } from 'mobidic';
-import { PageViewModelBase } from 'mobx-wouter';
+import { PageViewModelBase } from 'mobx-wouter/page-view-model';
 import { createRef } from 'yummies/mobx';
 
 import { TimeTrackerModel } from '@/entities/time-tracker/model';
