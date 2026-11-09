@@ -1,8 +1,11 @@
 import { Link } from 'mobx-route/react';
+import { withViewModel } from 'mobx-view-model-react';
 
 import { routes } from '@/shared/lib/routes';
 
-export const AboutPageView = () => {
+import { AboutPageVM } from './model';
+
+export const AboutPageContent = withViewModel(AboutPageVM, () => {
   return (
     <div className={'text-lg leading-6 flex flex-col gap-2'}>
       <p>
@@ -44,4 +47,4 @@ export const AboutPageView = () => {
       </Link>
     </div>
   );
-};
+});

@@ -1,4 +1,4 @@
-import { ViewModelProps } from 'mobx-view-model-react';
+import { withViewModel } from 'mobx-view-model-react';
 
 import { HomePageVM } from '../model';
 
@@ -12,7 +12,7 @@ import { ManualAddLog } from './components/manual-add-log';
 import { RateInput } from './components/rate-input';
 import { ResetTracking } from './components/reset-tracking';
 
-export const HomePageView = ({ model }: ViewModelProps<HomePageVM>) => {
+export const HomePage = withViewModel(HomePageVM, ({ model }) => {
   return (
     <>
       <div>
@@ -43,4 +43,4 @@ export const HomePageView = ({ model }: ViewModelProps<HomePageVM>) => {
       </div>
     </>
   );
-};
+});
